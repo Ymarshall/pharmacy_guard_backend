@@ -1,0 +1,152 @@
+================================================================================
+EXTRACTION DES DONNÉES - FICHIER DE GARDE
+================================================================================
+Fichier source: WhatsApp Image 2026-01-08 at 11.40.40.jpeg
+Date d'extraction: 11/01/2026 15:26:57
+ID du fichier: 14
+Statut: COMPLETED
+Pharmacies trouvées: 13
+Gardes créées: 13
+================================================================================
+
+DONNÉES JSON:
+--------------------------------------------------------------------------------
+{
+  "dutyFileId" : 14,
+  "status" : "COMPLETED",
+  "pharmaciesFound" : 13,
+  "dutiesCreated" : 13,
+  "pharmacies" : [ {
+    "zone" : "ADJAME CENTRE",
+    "pharmacyName" : "PHCIE D'ATTECOUBE",
+    "pharmacistName" : "M. DOSSO GANOUHO",
+    "phoneNumbers" : "TEL. 27 20 38 07 74",
+    "location" : "01 01 46 84 85/",
+    "commune" : null,
+    "pharmacyId" : 133,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ADJAME CENTRE",
+    "pharmacyName" : "PHCIE DU FORUM",
+    "pharmacistName" : "M.BOGUIFO CHARLES",
+    "phoneNumbers" : "TEL. 27 20 38 13 64",
+    "location" : "27 20 38 13 86",
+    "commune" : null,
+    "pharmacyId" : 134,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ADJAME CENTRE",
+    "pharmacyName" : "PHCIE DES GARES",
+    "pharmacistName" : "M. KIRE KOUADIO NOEL",
+    "phoneNumbers" : "TEL. 27 20 37 26 24",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 135,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ADJAME CENTRE",
+    "pharmacyName" : "PHCIE DE L'ESPOIR (NOUVELLE)",
+    "pharmacistName" : "MME SAVANE AMINATA HASSANE",
+    "phoneNumbers" : "TEL. 27 20 39 08 31",
+    "location" : "07 07 88 65 75",
+    "commune" : null,
+    "pharmacyId" : 136,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ADJAME CENTRE",
+    "pharmacyName" : "PHCIE KANA",
+    "pharmacistName" : "MME ANZOUAN KACOU EPSE DJEDJI",
+    "phoneNumbers" : "TEL. 05 06 23 90 96",
+    "location" : "07 57 14 63 09",
+    "commune" : null,
+    "pharmacyId" : 137,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ADJAME CENTRE",
+    "pharmacyName" : "PHCIE DES 220 LOGEMENTS (NLLE)",
+    "pharmacistName" : "MME KONE SAFIATOU EPSE AGNINI BILE",
+    "phoneNumbers" : "TEL. 27 20 37 58 26",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 138,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ADJAME CENTRE",
+    "pharmacyName" : "PHCIE ADJAME SANTE (NLLE)",
+    "pharmacistName" : "MME DIOP DIANE",
+    "phoneNumbers" : "TEL. 25 20 00 11 26",
+    "location" : "07 58 09 47 01",
+    "commune" : null,
+    "pharmacyId" : 139,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ADJAME CENTRE",
+    "pharmacyName" : "PHCIE MARIE THERESE D'ADJAME SARL.U.",
+    "pharmacistName" : "M. KONAN JULES STEPHANE",
+    "phoneNumbers" : "TEL. 07 89 0844 89",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 140,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ATTECOUBE",
+    "pharmacyName" : "PHCIE AGOUA",
+    "pharmacistName" : "M. AKRE MOBIO CHRISTOPHE",
+    "phoneNumbers" : "TEL. 07 09 31 27 51",
+    "location" : "01 40 21 32 73",
+    "commune" : null,
+    "pharmacyId" : 141,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ATTECOUBE FACE BOULANGERIE BBCO",
+    "pharmacyName" : "PHCIE FATIMA (NOUVELLE)",
+    "pharmacistName" : "M. YAO KOUAME APPOLINAIRE",
+    "phoneNumbers" : "TEL. 01 02 56 10 10",
+    "location" : "05 54 89 17 73",
+    "commune" : null,
+    "pharmacyId" : 142,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ATTECOUBE CARREFOUR DU PONT",
+    "pharmacyName" : "PHCIE D'AGBAN",
+    "pharmacistName" : "MME SERI",
+    "phoneNumbers" : "GNOLEBA FAWZILLATOU - TEL. 27 20 37 22 30",
+    "location" : "27 20 37 21 67",
+    "commune" : null,
+    "pharmacyId" : 143,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "WILLIAMSVILLE",
+    "pharmacyName" : "PHCIE SAINTE ROSALIE",
+    "pharmacistName" : "M. ALLALI JUSTIN",
+    "phoneNumbers" : "TEL.05 94 69 95 01",
+    "location" : "ADJAME WILLIAMSVILLE / MACACI QUARTIER SODECI A",
+    "commune" : null,
+    "pharmacyId" : 144,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "WILLIAMSVILLE",
+    "pharmacyName" : "PHCIE L'EMMANUEL",
+    "pharmacistName" : "M. ADOU ASSOIKOU ALEXIS",
+    "phoneNumbers" : "TEL. 27 20 38 40 17",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 145,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  } ],
+  "errorMessage" : null
+}
+--------------------------------------------------------------------------------

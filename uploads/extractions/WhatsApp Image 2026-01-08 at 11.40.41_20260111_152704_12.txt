@@ -1,0 +1,152 @@
+================================================================================
+EXTRACTION DES DONNÉES - FICHIER DE GARDE
+================================================================================
+Fichier source: WhatsApp Image 2026-01-08 at 11.40.41.jpeg
+Date d'extraction: 11/01/2026 15:27:04
+ID du fichier: 12
+Statut: COMPLETED
+Pharmacies trouvées: 13
+Gardes créées: 13
+================================================================================
+
+DONNÉES JSON:
+--------------------------------------------------------------------------------
+{
+  "dutyFileId" : 12,
+  "status" : "COMPLETED",
+  "pharmaciesFound" : 13,
+  "dutiesCreated" : 13,
+  "pharmacies" : [ {
+    "zone" : "SECTION DE KOUMASSI",
+    "pharmacyName" : "PHCIE DU CANAL",
+    "pharmacistName" : "M. OULAIS. URBAIN",
+    "phoneNumbers" : "TEL. 27 21 36 27 48",
+    "location" : "KOUMASSI REMBLAIS",
+    "commune" : null,
+    "pharmacyId" : 179,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE KOUMASSI",
+    "pharmacyName" : "PHCIE EL RAPHA DE ZOE BRUNO",
+    "pharmacistName" : "M. SOBRO OUTOU SALOMON",
+    "phoneNumbers" : "TEL. 27 21 20 62 40",
+    "location" : "07 87 93 18 93",
+    "commune" : null,
+    "pharmacyId" : 180,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE KOUMASSI",
+    "pharmacyName" : "PHCIE IROKO (GDE)",
+    "pharmacistName" : "M. ALLAH KOUADIO ANDRE",
+    "phoneNumbers" : "TEL. 27 21 56 43 53",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 181,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE KOUMASSI",
+    "pharmacyName" : "PHCIE ST ALBERT",
+    "pharmacistName" : "M. ASSAVO N'DA N'ZIAN",
+    "phoneNumbers" : "TEL. 01 01 44 43 65",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 182,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE KOUMASSI",
+    "pharmacyName" : "PHCIE STE FOI",
+    "pharmacistName" : "M. SOUMAHORO AMARA",
+    "phoneNumbers" : "TEL. 27 21 56 17 40",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 183,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE KOUMASSI",
+    "pharmacyName" : "PHCIE DE SOPIM",
+    "pharmacistName" : "M. N'GOSSAN EHOUMAN. DAVID",
+    "phoneNumbers" : "TEL. 27 21 36 69 32",
+    "location" : "KOUMASSI SOPIM",
+    "commune" : null,
+    "pharmacyId" : 184,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "MARCORY NORD",
+    "pharmacyName" : "PHCIE DU PETIT MARCHE",
+    "pharmacistName" : "MME BITTY MARIE NOELLE",
+    "phoneNumbers" : "TEL. 27 21 26 24 33",
+    "location" : "RUE DE L'EGLISE",
+    "commune" : null,
+    "pharmacyId" : 185,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "MARCORY NORD",
+    "pharmacyName" : "PHCIE TIACOH",
+    "pharmacistName" : "MME TIACOH JULIE",
+    "phoneNumbers" : "TEL. 27 21 26 28 15",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 186,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "MARCORY NORD",
+    "pharmacyName" : "PHCIE TSF MARCORY",
+    "pharmacistName" : "M. QUATTARA SIE",
+    "phoneNumbers" : "TEL. 27 21 26 78 12",
+    "location" : "01 51 48 75 70/07 99 70 84 36",
+    "commune" : null,
+    "pharmacyId" : 187,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ANOUMABO",
+    "pharmacyName" : "PHCIE JEHOVA",
+    "pharmacistName" : "05 54 37 08 18/MARCORY ALLIODAN CITE SETAO",
+    "phoneNumbers" : "JIRE SARL-U",
+    "location" : "MME ADOUENI KADJI ALBERTINE - TEL. 27 21 53 80 53/01 01 71 98 45/27 21 26 51 87",
+    "commune" : null,
+    "pharmacyId" : 188,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "MARCORY SUD",
+    "pharmacyName" : "PHCIE DU CARREFOUR",
+    "pharmacistName" : "M. ASSAHI GRAH",
+    "phoneNumbers" : "TEL. 27 21 35 11 66",
+    "location" : "29 70",
+    "commune" : null,
+    "pharmacyId" : 189,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "MARCORY SUD",
+    "pharmacyName" : "PHCIE PIERRE & MARIE CURIE",
+    "pharmacistName" : "M. DEM BRAHIMA",
+    "phoneNumbers" : "TEL. 27 21 35 80 30",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 190,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "MARCORY SUD",
+    "pharmacyName" : "PHCIE DE BIETRY IM. ADOUMEL AGNERO THOMAS",
+    "pharmacistName" : null,
+    "phoneNumbers" : "TEL. 27 21 24 86 89",
+    "location" : "24 86 56/",
+    "commune" : null,
+    "pharmacyId" : 191,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  } ],
+  "errorMessage" : null
+}
+--------------------------------------------------------------------------------

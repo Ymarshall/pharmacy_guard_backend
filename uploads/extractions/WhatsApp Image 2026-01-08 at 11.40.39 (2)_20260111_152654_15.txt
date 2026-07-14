@@ -1,0 +1,262 @@
+================================================================================
+EXTRACTION DES DONNÉES - FICHIER DE GARDE
+================================================================================
+Fichier source: WhatsApp Image 2026-01-08 at 11.40.39 (2).jpeg
+Date d'extraction: 11/01/2026 15:26:54
+ID du fichier: 15
+Statut: COMPLETED
+Pharmacies trouvées: 24
+Gardes créées: 24
+================================================================================
+
+DONNÉES JSON:
+--------------------------------------------------------------------------------
+{
+  "dutyFileId" : 15,
+  "status" : "COMPLETED",
+  "pharmaciesFound" : 24,
+  "dutiesCreated" : 24,
+  "pharmacies" : [ {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE IRYS",
+    "pharmacistName" : "MME MESSOU KRAIDI A. MARIE MERICI",
+    "phoneNumbers" : "TEL. 07 12 67 97 65",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 109,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE DE L'ETOILE IMME MANOUAN A. YOLANDE",
+    "pharmacistName" : null,
+    "phoneNumbers" : "TEL. 01 02 44 06 88",
+    "location" : "07 07 79 06 48/",
+    "commune" : null,
+    "pharmacyId" : 110,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE ST ANTOINE",
+    "pharmacistName" : "MME NIANGORAN MELANIE EPSE BONY",
+    "phoneNumbers" : "TEL. 27 20 24 77 47",
+    "location" : "07 07 87 31 47/01 42 36 67 68/",
+    "commune" : null,
+    "pharmacyId" : 111,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE AVOCATIER MARCHE",
+    "pharmacistName" : "M. DIOP KOUAME JUSTE",
+    "phoneNumbers" : "TEL. 27 24 49 70 19",
+    "location" : "07 09 30 38 52/",
+    "commune" : null,
+    "pharmacyId" : 112,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE DE LA CITE",
+    "pharmacistName" : "MME EGNANKOU JULIETTE",
+    "phoneNumbers" : "TEL. 27 24 39 03 33",
+    "location" : "07 49 36 82 79/",
+    "commune" : null,
+    "pharmacyId" : 113,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE DE LA PLAQUE II",
+    "pharmacistName" : "MME SANOH COULIBALY BERTHE",
+    "phoneNumbers" : "TEL. 07 09 89 94 44",
+    "location" : "05 46 63 84 13/",
+    "commune" : null,
+    "pharmacyId" : 114,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE PLAQUE ANADOR",
+    "pharmacistName" : "M. AZAGOH K. GUILLAUME",
+    "phoneNumbers" : "TEL. 07 12 49 81 38",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 115,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE D'ABOBOTE",
+    "pharmacistName" : "M. AKE AMAFIN NICODEME",
+    "phoneNumbers" : "TEL. 05 06 92 78 45",
+    "location" : "07 57 48 94 68/ROUTE DU ZOO/",
+    "commune" : null,
+    "pharmacyId" : 116,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE LES 4 SAISONS",
+    "pharmacistName" : "MME BADINI MARIAME",
+    "phoneNumbers" : null,
+    "location" : "TEL. 07 58 60 90 30/01 53 42 30 81/27 21 78 84 35/",
+    "commune" : null,
+    "pharmacyId" : 117,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE ABOBO BELLEVILLE (NOUVELLE)",
+    "pharmacistName" : "M. BEUGRE GUY CLAVER",
+    "phoneNumbers" : "TEL. 07 09 87 92 65",
+    "location" : "07 78 98 87 17",
+    "commune" : null,
+    "pharmacyId" : 118,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE ROUTE DU ZOO",
+    "pharmacistName" : "MANOMA ANOMA",
+    "phoneNumbers" : null,
+    "location" : "TEL. 01 01 14 04 34/07 89 73 13 56/",
+    "commune" : null,
+    "pharmacyId" : 119,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE DU MONASTERE",
+    "pharmacistName" : "M. KOUAME CHRISTOPHE",
+    "phoneNumbers" : "TEL. 07 07 20 11 61",
+    "location" : "01 40 34 09 10",
+    "commune" : null,
+    "pharmacyId" : 120,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE MARCHE VALENTIN",
+    "pharmacistName" : "M. EMIEME DANIEL",
+    "phoneNumbers" : "TEL. 07 00 44 94 49",
+    "location" : "01 01 06 11 01/27 22 26 76 73",
+    "commune" : null,
+    "pharmacyId" : 121,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO",
+    "pharmacyName" : "PHCIE YANDI",
+    "pharmacistName" : "M. KONE LADJI",
+    "phoneNumbers" : "TEL. 05 54 31 72 12",
+    "location" : "07 09 84 14 02/ABOBO AKEIKOI CARREFOUR DESTIN",
+    "commune" : null,
+    "pharmacyId" : 122,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO PK 18",
+    "pharmacyName" : "PHCIE SAFIR",
+    "pharmacistName" : "MLLE TOLO AWA",
+    "phoneNumbers" : "TEL. 07 09 86 26 35",
+    "location" : "05 05 83 54 83",
+    "commune" : null,
+    "pharmacyId" : 123,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO PK 18",
+    "pharmacyName" : "PHCIE N'DOTRE",
+    "pharmacistName" : "M. DIBY N'GUESSAN FIRMIN",
+    "phoneNumbers" : "TEL. 07 77 10 47 14",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 124,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO PK 18",
+    "pharmacyName" : "PHCIE ST ALEXANDRE",
+    "pharmacistName" : "MME KOFFI AFFOUO DOMINIQUE",
+    "phoneNumbers" : "ELISABETH - TEL. 07 59 04 35 42",
+    "location" : "01 40 29 69 84",
+    "commune" : null,
+    "pharmacyId" : 125,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO PK 18",
+    "pharmacyName" : "PHCIE SYNOVIE",
+    "pharmacistName" : "M. ASSAMOI BOITRIN PASCAL",
+    "phoneNumbers" : "TEL. 01 03 91 08 54",
+    "location" : "0798 74 61 89/27 36 85 75 24",
+    "commune" : null,
+    "pharmacyId" : 126,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO PK 18",
+    "pharmacyName" : "PHCIE ELIE FAUSTINE",
+    "pharmacistName" : "M. ABOYA YAPI JEAN PAUL",
+    "phoneNumbers" : "TEL. 05 44 11 26 12",
+    "location" : "01 40 30 69 54/ ANYAMA N'DOTRE-BLANKRO",
+    "commune" : null,
+    "pharmacyId" : 127,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOBO PK 18",
+    "pharmacyName" : "PHCIE AGNITIO",
+    "pharmacistName" : "M. BROU RENE WILFRIED",
+    "phoneNumbers" : "TEL. 01 40 43 10 10",
+    "location" : "05 01 07 30 30",
+    "commune" : null,
+    "pharmacyId" : 128,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ANYAMA",
+    "pharmacyName" : "PHCIE D'ANYAMA (NOUVELLE)",
+    "pharmacistName" : "M. AFFI KOFFI AMON HERVE",
+    "phoneNumbers" : "TEL. 27 23 55 94 18",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 129,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ANYAMA",
+    "pharmacyName" : "PHCIE ELIEL",
+    "pharmacistName" : "M.ATSE ASSI RODRIGUE",
+    "phoneNumbers" : "TEL. 27 33 73 73 56",
+    "location" : "07 69 74 22 69/ANYAMA QUARTIER RAN FACE A LA GARE",
+    "commune" : null,
+    "pharmacyId" : 130,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ANYAMA",
+    "pharmacyName" : "PHCIE BELLEVILLE",
+    "pharmacistName" : "M. TOUHON MOISE",
+    "phoneNumbers" : "TEL. 05 85 41 61 61",
+    "location" : "01 51 56 65 65/QUARTIER ADJAME SINAT, BELLEVILLE 2",
+    "commune" : null,
+    "pharmacyId" : 131,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ALEPE / MONTEZO/BROFODOUME",
+    "pharmacyName" : "PHCIE DES GENERATIONS DE MONTEZO",
+    "pharmacistName" : "M. BONI ALEX",
+    "phoneNumbers" : "",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 132,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  } ],
+  "errorMessage" : null
+}
+--------------------------------------------------------------------------------

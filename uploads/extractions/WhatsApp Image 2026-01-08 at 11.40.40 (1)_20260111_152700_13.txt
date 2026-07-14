@@ -1,0 +1,352 @@
+================================================================================
+EXTRACTION DES DONNÉES - FICHIER DE GARDE
+================================================================================
+Fichier source: WhatsApp Image 2026-01-08 at 11.40.40 (1).jpeg
+Date d'extraction: 11/01/2026 15:27:00
+ID du fichier: 13
+Statut: COMPLETED
+Pharmacies trouvées: 33
+Gardes créées: 33
+================================================================================
+
+DONNÉES JSON:
+--------------------------------------------------------------------------------
+{
+  "dutyFileId" : 13,
+  "status" : "COMPLETED",
+  "pharmaciesFound" : 33,
+  "dutiesCreated" : 33,
+  "pharmacies" : [ {
+    "zone" : "SECTION DE COCODY",
+    "pharmacyName" : "PHCIE NOTRE DAME DE LA NATIVITE",
+    "pharmacistName" : "M. DJAMA ROGER",
+    "phoneNumbers" : "TEL.21 21 80 51 85",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 146,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE COCODY",
+    "pharmacyName" : "PHCIE HAVILA (EX PRINCIPALE)",
+    "pharmacistName" : "M. OUSSOU KOFFI GERMAIN",
+    "phoneNumbers" : "TEL. 07 68 70 45 46",
+    "location" : "RUE PRINCIPALE",
+    "commune" : null,
+    "pharmacyId" : 147,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE COCODY",
+    "pharmacyName" : "PHCIE AKRE ALBERT ASSAMOI",
+    "pharmacistName" : "MME LILIANE AKRE",
+    "phoneNumbers" : "TEL. 07 57 13 68 36",
+    "location" : "01 40 95 24 28/NLLE GARE ROUTIERE",
+    "commune" : null,
+    "pharmacyId" : 148,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE COCODY",
+    "pharmacyName" : "PHCIE STE MARIE DE LA CELLE",
+    "pharmacistName" : "MME SAHUE ZADY MARIE FRANCOISE EPSE N'DOUA",
+    "phoneNumbers" : "TEL.07 02 95 24 31",
+    "location" : "01 51 92 25 91",
+    "commune" : null,
+    "pharmacyId" : 149,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE COCODY",
+    "pharmacyName" : "PHCIE AKANDJE",
+    "pharmacistName" : "M. LOUIS AMON",
+    "phoneNumbers" : "TEL. 01 72 75 01 01",
+    "location" : "05 06 39 16 55/07 00 77 96 70/",
+    "commune" : null,
+    "pharmacyId" : 150,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE COCODY",
+    "pharmacyName" : "PHCIE IDUREIL",
+    "pharmacistName" : "MME SOMA KYNA AUGUSTE EPSE ANGAMA",
+    "phoneNumbers" : "TEL: 05 55 74 06 18",
+    "location" : "07 49 37 95 73",
+    "commune" : null,
+    "pharmacyId" : 151,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE COCODY",
+    "pharmacyName" : "PHCIE CADUCEE MODERNE",
+    "pharmacistName" : "M CAKOU KIPRE GUILLAUME",
+    "phoneNumbers" : null,
+    "location" : "TEL. 05 85 66 35 35/AKOUEDO PALMERAIE ZONE ATCI",
+    "commune" : null,
+    "pharmacyId" : 152,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE COCODY",
+    "pharmacyName" : "PHCIE ST GEORGES D'AKOUEDO",
+    "pharmacistName" : "MME KONATE NIAGNA",
+    "phoneNumbers" : "TEL. 27 22 47 22 38",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 153,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE COCODY",
+    "pharmacyName" : "PHCIE CEPHAS",
+    "pharmacistName" : "MME COMOE ELISE",
+    "phoneNumbers" : "TEL. 07 77 74 58 57",
+    "location" : "07 07 69 48 67",
+    "commune" : null,
+    "pharmacyId" : 154,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE COCODY",
+    "pharmacyName" : "PHCIE CATLEYAS",
+    "pharmacistName" : "MME SERY FATOUMATA",
+    "phoneNumbers" : "TEL. 27 22 47 07 79",
+    "location" : "BD MITTERRAND CARREFOUR ABATTA",
+    "commune" : null,
+    "pharmacyId" : 155,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE COCODY",
+    "pharmacyName" : "PHCIE LA BENEDICTION",
+    "pharmacistName" : "M. GBEY SIGUI DIOMANDE",
+    "phoneNumbers" : "TEL. 27 22 30 42 43",
+    "location" : "01 61 06 61 00/ZONE DE LA CITE SIR/",
+    "commune" : null,
+    "pharmacyId" : 156,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "RIVIERA",
+    "pharmacyName" : "PHCIE ST ATHANASE",
+    "pharmacistName" : "MME ALLAH KOUADIO ANNE MARIE",
+    "phoneNumbers" : "TEL. 27 22 43 55 87",
+    "location" : "RIVIERA II/ROUTE D'ANONO/",
+    "commune" : null,
+    "pharmacyId" : 157,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "RIVIERA",
+    "pharmacyName" : "PHCIE TERA",
+    "pharmacistName" : "M KANTE BARRY AICHATOU",
+    "phoneNumbers" : null,
+    "location" : "TEL. 07 77 88 74 14/27 22 42 49 91",
+    "commune" : null,
+    "pharmacyId" : 158,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "RIVIERA",
+    "pharmacyName" : "PHCIE DU PATRIMOINE",
+    "pharmacistName" : "MME CHANTAL DIDIA",
+    "phoneNumbers" : "GUEDE - TEL. 27 22 31 94 29",
+    "location" : "05 01 41 33 33",
+    "commune" : null,
+    "pharmacyId" : 159,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "RIVIERA",
+    "pharmacyName" : "PHCIE BD MITTERRAND",
+    "pharmacistName" : "M. N'DOUBA KASSI RAPHAEL",
+    "phoneNumbers" : "TEL. 27 22 47 90 45",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 160,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "RIVIERA",
+    "pharmacyName" : "PHCIE DES CITES SYNACASSI SARL",
+    "pharmacistName" : "M. BONI HERVE",
+    "phoneNumbers" : null,
+    "location" : "TEL. 07 58 14 14 05/25 22 00 13 15",
+    "commune" : null,
+    "pharmacyId" : 161,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "RIVIERA",
+    "pharmacyName" : "PHCIE PALMERAIE SARL",
+    "pharmacistName" : null,
+    "phoneNumbers" : null,
+    "location" : "M. M'BAHIA YAO K. HONORE - TEL. 27 22 47 91 19/",
+    "commune" : null,
+    "pharmacyId" : 162,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "RIVIERA",
+    "pharmacyName" : "PHCIE ENICA",
+    "pharmacistName" : "M. GORE BI TRA JEAN SYLVAIN",
+    "phoneNumbers" : null,
+    "location" : "TEL. 27 22 49 33 75/05 46 47 46 94",
+    "commune" : null,
+    "pharmacyId" : 163,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "RIVIERA",
+    "pharmacyName" : "PHCIE NOTRE DAME DE L'INCARNATION",
+    "pharmacistName" : "MME SANGA EKRA BASILIDE",
+    "phoneNumbers" : "TEL. 27 22 59 20 39",
+    "location" : "07 08 94 58 53/",
+    "commune" : null,
+    "pharmacyId" : 164,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "RIVIERA",
+    "pharmacyName" : "PHCIE ANALYA",
+    "pharmacistName" : "M. YANGNI NDA YVES STEPHANE",
+    "phoneNumbers" : "TEL. 07 08 95 19 25",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 165,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "RIVIERA",
+    "pharmacyName" : "PHCIE STE AGNES",
+    "pharmacistName" : "MME HARDING YOLANDE",
+    "phoneNumbers" : "TEL. 01 01 13 84 17",
+    "location" : "RIVIERA BONOUMIN/CARREFOUR TOP PAIN TERMINUS",
+    "commune" : null,
+    "pharmacyId" : 166,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "COCODY",
+    "pharmacyName" : "PHCIE LES 7 COLONNES",
+    "pharmacistName" : "MME SANLE YVONNE",
+    "phoneNumbers" : "TEL. 27 22 44 02 96",
+    "location" : "07 57 49 08 45",
+    "commune" : null,
+    "pharmacyId" : 167,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "COCODY",
+    "pharmacyName" : "PHCIE BEREKYAHI MME KOFFI YAPI MARISE EPSE GNAYORO.",
+    "pharmacistName" : null,
+    "phoneNumbers" : "TEL. 27 22 48 79 89",
+    "location" : "07 57 49 08 42",
+    "commune" : null,
+    "pharmacyId" : 168,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "II PLATEAUX",
+    "pharmacyName" : "PHCIE BONNE SANTE",
+    "pharmacistName" : "MME KASSOU EPSE KANE AYA BRIGITTE",
+    "phoneNumbers" : "TEL. 27 22 25 60 29",
+    "location" : "05 86 57 92 36/07 68 60 92 05",
+    "commune" : null,
+    "pharmacyId" : 169,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "COCODY 2 PLATEAUX-AGBAN/ROUTE WILLIAMSVILLE",
+    "pharmacyName" : "PHCIE ST JOSEPH",
+    "pharmacistName" : "TEL. 07 79 76 05 77",
+    "phoneNumbers" : null,
+    "location" : "05 46 00 04 44/01 42 05 75 76",
+    "commune" : null,
+    "pharmacyId" : 170,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "COCODY 2 PLATEAUX-AGBAN/ROUTE WILLIAMSVILLE",
+    "pharmacyName" : "PHCIE ORCHID",
+    "pharmacistName" : "MME AJAMI MALACK",
+    "phoneNumbers" : "TEL.27 22 40 42 75",
+    "location" : "2 PLATEAUX / BOULEVARD LATRILLE CARREFOUR MACACI",
+    "commune" : null,
+    "pharmacyId" : 171,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "COCODY 2 PLATEAUX-AGBAN/ROUTE WILLIAMSVILLE",
+    "pharmacyName" : "PHCIE LES TULIPES",
+    "pharmacistName" : "MME DIZO DOROTHEE",
+    "phoneNumbers" : "JOHANA EPSE COULIBALY- TEL.27 22 42 50 17",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 172,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "COCODY 2 PLATEAUX-AGBAN/ROUTE WILLIAMSVILLE",
+    "pharmacyName" : "PHCIE SAINT ANGE DES AMIS",
+    "pharmacistName" : "MME IRIE NATHALIE",
+    "phoneNumbers" : "TEL 27 22 30 05 72",
+    "location" : "07 78 41 52 77/07 69 35 40 24",
+    "commune" : null,
+    "pharmacyId" : 173,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "COCODY 2 PLATEAUX-AGBAN/ROUTE WILLIAMSVILLE",
+    "pharmacyName" : "PHCIE NOTRE DAME DU GRAND SIGNE",
+    "pharmacistName" : "MME KOUAME EMELINE EPSE DAKOURI",
+    "phoneNumbers" : "TEL. 27 22 42 64 13",
+    "location" : "07 89 12 75 15/",
+    "commune" : null,
+    "pharmacyId" : 174,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "COCODY 2 PLATEAUX-AGBAN/ROUTE WILLIAMSVILLE",
+    "pharmacyName" : "PHCIE BELLEVUE",
+    "pharmacistName" : "MME AMANI FABIENNE",
+    "phoneNumbers" : "TEL. 27 22 50 06 24",
+    "location" : "07 79 33 06 11/07 07 09 95 08/ANGRE 8EME TRANCHE",
+    "commune" : null,
+    "pharmacyId" : 175,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "COCODY 2 PLATEAUX-AGBAN/ROUTE WILLIAMSVILLE",
+    "pharmacyName" : "PHCIE LES ARCADES SUR LA VOIE EN PAVE",
+    "pharmacistName" : null,
+    "phoneNumbers" : null,
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 176,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "COCODY 2 PLATEAUX-AGBAN/ROUTE WILLIAMSVILLE",
+    "pharmacyName" : "PHCIE ESPERANCE (NLLE)",
+    "pharmacistName" : "MME BAYOH KALIDJA",
+    "phoneNumbers" : "TEL. 25 21 01 57 04",
+    "location" : "05 46 81 73 55",
+    "commune" : null,
+    "pharmacyId" : 177,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "COCODY 2 PLATEAUX-AGBAN/ROUTE WILLIAMSVILLE",
+    "pharmacyName" : "PHCIE LA REDEMPTION SARLU",
+    "pharmacistName" : "M. AKE N'GUESSAN VICTOR",
+    "phoneNumbers" : "TEL. 25 22 01 61 96",
+    "location" : "07 89 43 63 70",
+    "commune" : null,
+    "pharmacyId" : 178,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  } ],
+  "errorMessage" : null
+}
+--------------------------------------------------------------------------------

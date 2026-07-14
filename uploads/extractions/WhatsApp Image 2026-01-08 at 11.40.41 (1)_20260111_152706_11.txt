@@ -1,0 +1,122 @@
+================================================================================
+EXTRACTION DES DONNÉES - FICHIER DE GARDE
+================================================================================
+Fichier source: WhatsApp Image 2026-01-08 at 11.40.41 (1).jpeg
+Date d'extraction: 11/01/2026 15:27:06
+ID du fichier: 11
+Statut: COMPLETED
+Pharmacies trouvées: 10
+Gardes créées: 10
+================================================================================
+
+DONNÉES JSON:
+--------------------------------------------------------------------------------
+{
+  "dutyFileId" : 11,
+  "status" : "COMPLETED",
+  "pharmaciesFound" : 10,
+  "dutiesCreated" : 10,
+  "pharmacies" : [ {
+    "zone" : "SECTION DU PLATEAU",
+    "pharmacyName" : "PHCIE AVENUE CHARDY",
+    "pharmacistName" : "MME LY DJENEBA",
+    "phoneNumbers" : "TEL. 27 20 21 66 01",
+    "location" : "07 49 79 88 45",
+    "commune" : null,
+    "pharmacyId" : 192,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "CENTRE",
+    "pharmacyName" : "PHCIE DE PORT",
+    "pharmacistName" : null,
+    "phoneNumbers" : "BOUET",
+    "location" : "MME GBAKA TCHETCHE NANA BOUKARY- TEL. 27 21 27 89 17/01 40 77 08 68",
+    "commune" : null,
+    "pharmacyId" : 193,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "CENTRE",
+    "pharmacyName" : "PHCIE DE L'OCEAN",
+    "pharmacistName" : "M. AKA AQUELE",
+    "phoneNumbers" : "TEL. 27 21 27 78 48",
+    "location" : "79 43 / ANGLE AV. PACIFIQUE",
+    "commune" : null,
+    "pharmacyId" : 194,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "CENTRE",
+    "pharmacyName" : "PHCIE ST AMBROISE",
+    "pharmacistName" : "M. YAYO SERGE",
+    "phoneNumbers" : "TEL. 25 21 00 62 75",
+    "location" : "05 66 01 99 99",
+    "commune" : null,
+    "pharmacyId" : 195,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "VRIDI",
+    "pharmacyName" : "PHCIE VRIDI",
+    "pharmacistName" : null,
+    "phoneNumbers" : "VILLAGE",
+    "location" : "M. KOFFI EMMANUEL - TEL. 27 21 39 13 70/27 21 27 58 60",
+    "commune" : null,
+    "pharmacyId" : 196,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ADJOUFFOU/GONZAQ/ ANANI",
+    "pharmacyName" : "PHCIE DES PLAGES",
+    "pharmacistName" : "M. NIAMKE ARISTIDE",
+    "phoneNumbers" : "TEL. 07 58 17 15 97",
+    "location" : "01 03 16 37 57",
+    "commune" : null,
+    "pharmacyId" : 197,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ADJOUFFOU/GONZAQ/ ANANI",
+    "pharmacyName" : "PHCIE CHATELET",
+    "pharmacistName" : "M. NATCHIA ETTE W.",
+    "phoneNumbers" : null,
+    "location" : "TEL. 07 67 97 04 67/05 01 56 99 80/07 77 39 66 30/05 06 17 13 28",
+    "commune" : null,
+    "pharmacyId" : 198,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ADJOUFFOU/GONZAQ/ ANANI",
+    "pharmacyName" : "PHCIE KOFFI KRA",
+    "pharmacistName" : "M. KOFFI KRA AIME",
+    "phoneNumbers" : "TEL. 07 58 00 73 24",
+    "location" : "07 48 64 68 36 GONZAG /CARREFOUR USINE 12T/ENTRE",
+    "commune" : null,
+    "pharmacyId" : 199,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE TREICHVILLE",
+    "pharmacyName" : "PHCIE ROY",
+    "pharmacistName" : "MME ALLANGBA ESTHER",
+    "phoneNumbers" : "TEL. 27 21 24 09 13",
+    "location" : "21 25/ PLACE DU MARCHE",
+    "commune" : null,
+    "pharmacyId" : 200,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE TREICHVILLE",
+    "pharmacyName" : "PHCIE ODE",
+    "pharmacistName" : "M. AHO AKANDAN T. MICHEL",
+    "phoneNumbers" : "TEL. 27 21 25 39 27",
+    "location" : "RUE 38 TREICHVILLE",
+    "commune" : null,
+    "pharmacyId" : 201,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  } ],
+  "errorMessage" : null
+}
+--------------------------------------------------------------------------------

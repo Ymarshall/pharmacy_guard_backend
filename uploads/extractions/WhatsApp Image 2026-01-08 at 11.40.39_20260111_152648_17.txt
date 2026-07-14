@@ -1,0 +1,412 @@
+================================================================================
+EXTRACTION DES DONNÉES - FICHIER DE GARDE
+================================================================================
+Fichier source: WhatsApp Image 2026-01-08 at 11.40.39.jpeg
+Date d'extraction: 11/01/2026 15:26:48
+ID du fichier: 17
+Statut: COMPLETED
+Pharmacies trouvées: 39
+Gardes créées: 39
+================================================================================
+
+DONNÉES JSON:
+--------------------------------------------------------------------------------
+{
+  "dutyFileId" : 17,
+  "status" : "COMPLETED",
+  "pharmaciesFound" : 39,
+  "dutiesCreated" : 39,
+  "pharmacies" : [ {
+    "zone" : "GAGNOA",
+    "pharmacyName" : "PHCIE LAFIA",
+    "pharmacistName" : "M.TOURE TESSE HAMED",
+    "phoneNumbers" : "TEL 27 32 77 25 20",
+    "location" : "PETIT MARCHE DIOULABOUGOU",
+    "commune" : null,
+    "pharmacyId" : 59,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "GAGNOA",
+    "pharmacyName" : "PHCIE PRINCIPALE",
+    "pharmacistName" : "M. DIABI MAMADOU",
+    "phoneNumbers" : "TEL. 27 32 77 23 16",
+    "location" : "FACE SOCOCE",
+    "commune" : null,
+    "pharmacyId" : 60,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "GAGNOA",
+    "pharmacyName" : "PHCIE DE GARAHIO",
+    "pharmacistName" : "M. YEBOUE HENRI LEONCE",
+    "phoneNumbers" : "TEL. 32 77 10 56",
+    "location" : "GARAHIO",
+    "commune" : null,
+    "pharmacyId" : 61,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "GAGNOA",
+    "pharmacyName" : "PHCIE DIOULABOUGOU SANTE",
+    "pharmacistName" : "M. ADJALOU BROU FELIX TEL. 27 32 77 16 35",
+    "phoneNumbers" : null,
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 62,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ISSIA",
+    "pharmacyName" : "PHCIE MANUELLA",
+    "pharmacistName" : "M. TRAZIE BI GOSSE",
+    "phoneNumbers" : "TEL. 05 75 41 56 31",
+    "location" : "07 68 36 96 47/ONY-BABRE",
+    "commune" : null,
+    "pharmacyId" : 63,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ISSIA",
+    "pharmacyName" : "PHCIE SAINTE EUNICE",
+    "pharmacistName" : "M. M.EVI JEAN BEDEL",
+    "phoneNumbers" : "TEL. 07 07 92 60 66",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 64,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ISSIA",
+    "pharmacyName" : "PHCIE WASSIA",
+    "pharmacistName" : "MME OBRE ZEBE GILBERTE",
+    "phoneNumbers" : "TEL. 27 21 30 17 94",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 65,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ISSIA",
+    "pharmacyName" : "PHCIE LE REEL",
+    "pharmacistName" : "MME EROUBINOU EPSE AFFRO AYA EVELYNE",
+    "phoneNumbers" : "TEL. 27 21 30 33 47",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 66,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ISSIA",
+    "pharmacyName" : "PHCIE LEANA",
+    "pharmacistName" : "M. BALLEY PATRICK JUSTIN",
+    "phoneNumbers" : "TEL. 07 97 01 84 64",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 67,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ISSIA",
+    "pharmacyName" : "PHCIE MORIJAH",
+    "pharmacistName" : "M. BALO BI TOZAN ARNAUD",
+    "phoneNumbers" : "TEL. 05 84 32 21 21",
+    "location" : "05 76 99 05 05",
+    "commune" : null,
+    "pharmacyId" : 68,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ISSIA",
+    "pharmacyName" : "PHCIE DIVINE GRACE",
+    "pharmacistName" : null,
+    "phoneNumbers" : "27 34 77 82",
+    "location" : "07 57 48 81 40/01 71 57 07 07",
+    "commune" : null,
+    "pharmacyId" : 69,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ISSIA",
+    "pharmacyName" : "PHCIE HADASSA (GDE)",
+    "pharmacistName" : "MME DEMBELE MARIAM EPSE OLUKOLO",
+    "phoneNumbers" : "TEL. 07 87 87 62 39",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 70,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "KORHOGO",
+    "pharmacyName" : "PHCIE DU 14",
+    "pharmacistName" : "M.CISSE MAMADOU",
+    "phoneNumbers" : "TEL. 27 36 85 04 73",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 71,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE SALAM KORHOGO",
+    "pharmacistName" : "M. DEGBEGNON DAVY ISMAEL",
+    "phoneNumbers" : "TEL. 27 36 80 00 51",
+    "location" : "07 69 51 96 29",
+    "commune" : null,
+    "pharmacyId" : 72,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE CHIGATA",
+    "pharmacistName" : "MME KOUASSI EPSE KOFFI KONAN AFFOUE MONIQUE",
+    "phoneNumbers" : "TEL. 05 01 28 16 16",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 73,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE FOTAMANA",
+    "pharmacistName" : "M. OKOU SOSTHENE",
+    "phoneNumbers" : "TEL. 07 04 64 93 82",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 74,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE SANMIEN DE NATIO",
+    "pharmacistName" : null,
+    "phoneNumbers" : "27 35 95 97",
+    "location" : "07 00 77 88 08/QUARTIER NATIO KOBADARA, ROUTE DE FERKE",
+    "commune" : null,
+    "pharmacyId" : 75,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE DES CASCADES",
+    "pharmacistName" : "M. YAPO SERGE",
+    "phoneNumbers" : "TEL. 27 24 57 77 10",
+    "location" : "01 01 03 83 91",
+    "commune" : null,
+    "pharmacyId" : 76,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE LYMANYA",
+    "pharmacistName" : "M DOSSO VATAKI",
+    "phoneNumbers" : "TEL. 27 33 73 03 69",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 77,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE LA COLOMBE(NVLLE)",
+    "pharmacistName" : "MME MIAN TIA YOBOUA",
+    "phoneNumbers" : "TEL. 01 33 78 07 49",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 78,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE DI GEORGES",
+    "pharmacistName" : "M. KONAN KOUADIO GEORGES",
+    "phoneNumbers" : "TEL. 07 48 92 70 00",
+    "location" : "05 75 43 73 74/07 07 40 46 07",
+    "commune" : null,
+    "pharmacyId" : 79,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE DU ROND POINT",
+    "pharmacistName" : "M. KOUASSI KOUAME MARTIN",
+    "phoneNumbers" : "TEL. 07 07 49 89 10",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 80,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE DE LA CITE (NVLLE)",
+    "pharmacistName" : "M. MABO SERGE THIERRY",
+    "phoneNumbers" : "TEL 27 34 71 11 71",
+    "location" : "07 89 26 24 25",
+    "commune" : null,
+    "pharmacyId" : 81,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE QUARTIER FRANCOPHONIE",
+    "pharmacistName" : "M.KOUAME PHILLIPE",
+    "phoneNumbers" : "TEL. 07 67 07 84 62",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 82,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE DE L'ARCHANGE",
+    "pharmacistName" : "MME DOFFOU MAMENE MARIE CHISTELLE",
+    "phoneNumbers" : "TEL. 27 34 71 01 62",
+    "location" : "07 07 09 00 37",
+    "commune" : null,
+    "pharmacyId" : 83,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE DES MOSQUEES",
+    "pharmacistName" : "M. AMON ARNAUD",
+    "phoneNumbers" : "TEL. 07 79 44 54 87",
+    "location" : "07 79 44 54 87",
+    "commune" : null,
+    "pharmacyId" : 84,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE DE LA VIE",
+    "pharmacistName" : "M.GOSSO FRANCK GERARD",
+    "phoneNumbers" : "TEL. 27 33 71 64 40",
+    "location" : "01 04 69 22 54/07 48 37 09 92",
+    "commune" : null,
+    "pharmacyId" : 85,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE PRINCIPALE DE SINFRA",
+    "pharmacistName" : "M. KOUASSI CHARLEMAGNE",
+    "phoneNumbers" : "07 79 96 46",
+    "location" : "01 51 05 67 24/ROUTE DE YAMOUSSOUKRO / FACE A LA STATION TOTAL",
+    "commune" : null,
+    "pharmacyId" : 86,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE NOTRE DAME DE LA PAIX",
+    "pharmacistName" : null,
+    "phoneNumbers" : "01 42 24 16",
+    "location" : "05 76 57 53 53/ADIAPODOUME A COTE DU RESTAURANT CHEZ ZONGO",
+    "commune" : null,
+    "pharmacyId" : 19,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE ELIORA",
+    "pharmacistName" : "MME SAUGONE CARINE EPSE LATTA",
+    "phoneNumbers" : "TEL. 01 03 79 39 05",
+    "location" : "SONGON KASSEMBLE",
+    "commune" : null,
+    "pharmacyId" : 87,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YAMOUSSOUKRO",
+    "pharmacyName" : "PHCIE DU CHATEAU SARL",
+    "pharmacistName" : null,
+    "phoneNumbers" : null,
+    "location" : "M. AGUIDO ABRAHAM - TEL. 27 34 72 59 96 /",
+    "commune" : null,
+    "pharmacyId" : 88,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ROUTE PETIT MARCHE CHATEAU",
+    "pharmacyName" : "PHCIE DE LA MOSQUEE",
+    "pharmacistName" : "M DAPRE DJOUKOUA M.",
+    "phoneNumbers" : "TEL. 27 34 70 11 67",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 89,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ROUTE PETIT MARCHE CHATEAU",
+    "pharmacyName" : "PHCIE AYA VALENTINE",
+    "pharmacistName" : "M. AKPO JOSEPH",
+    "phoneNumbers" : "TEL. 27 23 57 50 91",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 90,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ROUTE PETIT MARCHE CHATEAU",
+    "pharmacyName" : "PHCIE DE YAMOUSSOUKROMME AGBASSI MARIE ANTOINETTE",
+    "pharmacistName" : null,
+    "phoneNumbers" : "TEL. 07 49 37 99 42",
+    "location" : "27 30 64 04 12/",
+    "commune" : null,
+    "pharmacyId" : 91,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ROUTE PETIT MARCHE CHATEAU",
+    "pharmacyName" : "PHCIE ERGINAL",
+    "pharmacistName" : "M. EHORA TEHOA",
+    "phoneNumbers" : "TEL. 07 57 14 38 36",
+    "location" : "27 30 64 62 20/27 30 64 62 21/",
+    "commune" : null,
+    "pharmacyId" : 92,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "GD CARREFOUR ASSABOU",
+    "pharmacyName" : "PHCIE NOTRE DAME DE FATIMA",
+    "pharmacistName" : null,
+    "phoneNumbers" : "27 30 64 57",
+    "location" : "MME AMOUSSOU TRA TIEBI H. PATRICIA - TEL. 07 57 17 07 00 /",
+    "commune" : null,
+    "pharmacyId" : 93,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "GD CARREFOUR ASSABOU",
+    "pharmacyName" : "PHCIE SANS FRONTIERES",
+    "pharmacistName" : null,
+    "phoneNumbers" : "27 20 24 46",
+    "location" : "05 84 88 73 54/DIOULAKRO-CARREFOUR GARE SANS FRONTIERES",
+    "commune" : null,
+    "pharmacyId" : 94,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "GD CARREFOUR ASSABOU",
+    "pharmacyName" : "PHCIE STE FAMILLE",
+    "pharmacistName" : "M. NDA KACOU",
+    "phoneNumbers" : "TEL. 01 41 63 92 08",
+    "location" : "25 30 00 06 69 / MARCHE SOPIM",
+    "commune" : null,
+    "pharmacyId" : 3,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "GD CARREFOUR ASSABOU",
+    "pharmacyName" : "PHCIE LES JASMINS",
+    "pharmacistName" : "MME MANOUAN",
+    "phoneNumbers" : "CARVALHO KHARINE MARIE- TEL. 27 21 76 42 42",
+    "location" : "07 79 90 69 17",
+    "commune" : null,
+    "pharmacyId" : 95,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  } ],
+  "errorMessage" : null
+}
+--------------------------------------------------------------------------------

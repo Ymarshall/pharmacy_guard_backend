@@ -1,0 +1,402 @@
+================================================================================
+EXTRACTION DES DONNÉES - FICHIER DE GARDE
+================================================================================
+Fichier source: WhatsApp Image 2026-01-08 at 11.40.38.jpeg
+Date d'extraction: 10/01/2026 15:46:38
+ID du fichier: 6
+Statut: COMPLETED
+Pharmacies trouvées: 38
+Gardes créées: 0
+================================================================================
+
+DONNÉES JSON:
+--------------------------------------------------------------------------------
+{
+  "dutyFileId" : 6,
+  "status" : "COMPLETED",
+  "pharmaciesFound" : 38,
+  "dutiesCreated" : 0,
+  "pharmacies" : [ {
+    "zone" : "ABENGOUROU",
+    "pharmacyName" : "PHCIE DU MARCHE",
+    "pharmacistName" : "MME SENIN DON MELLO A. CHRISTELLE",
+    "phoneNumbers" : "TEL. 27 35 91 30 09",
+    "location" : "01 02 03 87 17",
+    "commune" : null,
+    "pharmacyId" : 2,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABENGOUROU",
+    "pharmacyName" : "PHCIE STE FAMILLE",
+    "pharmacistName" : "M GNAGBO URBAIN",
+    "phoneNumbers" : "TEL. 27 35 91 30 09",
+    "location" : "PRES HOTEL LE ROYAUME",
+    "commune" : null,
+    "pharmacyId" : 3,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ABOISSO",
+    "pharmacyName" : "PHCIE DU MARCHE",
+    "pharmacistName" : "M. DIALLO OUSMANE",
+    "phoneNumbers" : "TEL. 27 21 30 40 63",
+    "location" : "FACE A LA PLACE ELLEIGAND",
+    "commune" : null,
+    "pharmacyId" : 2,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ADIAKE",
+    "pharmacyName" : "PHCIE D'ADIAKE",
+    "pharmacistName" : "MME AKE DENISE",
+    "phoneNumbers" : "TEL. 27 23 53 02 46",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 4,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BAYOTA",
+    "pharmacyName" : "PHCIE D'ADZOPE",
+    "pharmacistName" : "M. N'GUESSAN KONAN BERTIN",
+    "phoneNumbers" : "TEL. 27 23 54 19 11",
+    "location" : "A L'ENTREE D'ADZOPE",
+    "commune" : null,
+    "pharmacyId" : 5,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BAYOTA",
+    "pharmacyName" : "PHCIE DU MASSAN",
+    "pharmacistName" : "M. ALLE AYE FERDINAND",
+    "phoneNumbers" : "TEL. 27 23 54 03 42",
+    "location" : "07 57 49 38 53",
+    "commune" : null,
+    "pharmacyId" : 6,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BAYOTA",
+    "pharmacyName" : "PHCIE DE L'AGNEBY (GDE)",
+    "pharmacistName" : null,
+    "phoneNumbers" : "01 02 03 66",
+    "location" : "07 78 98 96 21/07 48 00 23 66",
+    "commune" : null,
+    "pharmacyId" : 7,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BAYOTA",
+    "pharmacyName" : "PHCIE DU COMMERCE (GDE)",
+    "pharmacistName" : "M. ASSOUMOU MICHEL",
+    "phoneNumbers" : "TEL. 27 23 54 60 40",
+    "location" : "07 59 06 79 57",
+    "commune" : null,
+    "pharmacyId" : 8,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BAYOTA",
+    "pharmacyName" : "PHCIE AVENIR SANTE (EX K. BOILOT)",
+    "pharmacistName" : "M. AKA TCHIMOU FERNAND",
+    "phoneNumbers" : "TEL. 01 40 74 49 20",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 9,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BAYOTA",
+    "pharmacyName" : "PHCIE APPY",
+    "pharmacistName" : null,
+    "phoneNumbers" : "MOYA",
+    "location" : "MME KACOU LEGBE FLORENTINE - TEL. 07 02 77 69 63",
+    "commune" : null,
+    "pharmacyId" : 10,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BONOUA",
+    "pharmacyName" : "PHCIE EBEN",
+    "pharmacistName" : null,
+    "phoneNumbers" : "EZER",
+    "location" : "M. AMANI ANTHELME ENOC - TEL. 27 21 30 90 55/01 02 80 20 08",
+    "commune" : null,
+    "pharmacyId" : 11,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BOUAKE",
+    "pharmacyName" : "PHCIE FELY",
+    "pharmacistName" : "MME KPAN MANNOU FRANCOISE",
+    "phoneNumbers" : "TEL. 01 51 42 22 58",
+    "location" : "NOUVEAU MARCHE",
+    "commune" : null,
+    "pharmacyId" : 12,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BOUAKE",
+    "pharmacyName" : "PHCIE DE L'ALLIANCE (NLLE)",
+    "pharmacistName" : "M. KOUADIO NGUESSAN PASCAL",
+    "phoneNumbers" : "TEL 07 07 08 79 57",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 13,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BOUAKE",
+    "pharmacyName" : "PHCIE BEL AIR",
+    "pharmacistName" : "M. KONE MOUSSA",
+    "phoneNumbers" : "TEL. 27 31 63 59 90",
+    "location" : "ZONE EN FACE DU MARCHE",
+    "commune" : null,
+    "pharmacyId" : 14,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BOUAKE",
+    "pharmacyName" : "PHCIE FATIMA",
+    "pharmacistName" : "M. GNAGBO SERGE",
+    "phoneNumbers" : "TEL. 27 21 78 86 96",
+    "location" : "07 47 61 67 05/07 07 01 21 85",
+    "commune" : null,
+    "pharmacyId" : 15,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BOUAKE",
+    "pharmacyName" : "PHCIE KOKO",
+    "pharmacistName" : "M. MOUSSO AMBROISE",
+    "phoneNumbers" : "TEL. 07 57 14 38 35",
+    "location" : "07 47 00 33 31/KOKO ROUTE DU CHU",
+    "commune" : null,
+    "pharmacyId" : 16,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BOUAKE",
+    "pharmacyName" : "PHCIE LAEL",
+    "pharmacistName" : "M. KACOU PATRICE",
+    "phoneNumbers" : "TEL. 07 47 12 00 27",
+    "location" : "NIMBO, FACE AUX IMPOTS, ROUTE ABIDJAN",
+    "commune" : null,
+    "pharmacyId" : 17,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BOUAKE",
+    "pharmacyName" : "PHCIE MODERNE KENNEDY",
+    "pharmacistName" : "M.TOA BI IRIE",
+    "phoneNumbers" : "TEL. 27 31 62 42 04",
+    "location" : "07 68 11 54 69/07 17 55 50 76",
+    "commune" : null,
+    "pharmacyId" : 18,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BOUAKE",
+    "pharmacyName" : "PHCIE NOTRE DAME DE LA PAIX",
+    "pharmacistName" : "M. EWUSSI LUCIEN",
+    "phoneNumbers" : "TEL. 27 31 64 85 85",
+    "location" : "07 48 54 69 71",
+    "commune" : null,
+    "pharmacyId" : 19,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BOUAKE",
+    "pharmacyName" : "PHCIE SAINT JEAN",
+    "pharmacistName" : "TEL.27 33 80 01 86",
+    "phoneNumbers" : null,
+    "location" : "07 57 14 38 42/QTIER AHOUGNANSOU AVANT LE PETIT MARCHE",
+    "commune" : null,
+    "pharmacyId" : 20,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BOUAKE",
+    "pharmacyName" : "PHCIE SAINT MARC BROUKRO",
+    "pharmacistName" : null,
+    "phoneNumbers" : "07 49 07 27",
+    "location" : "01 01 15 72 20/3EME ARRET / PRET DU GROUPE SCOLAIRE BROUKRO 1",
+    "commune" : null,
+    "pharmacyId" : 21,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "BOUAKE",
+    "pharmacyName" : "PHCIE SAINTE FAMILLE DE TOLLAKOUADIOKRO",
+    "pharmacistName" : null,
+    "phoneNumbers" : "27 32 79 46",
+    "location" : "07 14 64 24 34 / EN FACE DU MARCHE DE TOLLAKOUADIOKRO",
+    "commune" : null,
+    "pharmacyId" : 22,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DABOU",
+    "pharmacyName" : "PHCIE FEZAN",
+    "pharmacistName" : "MME NENIN YOUAN LOU",
+    "phoneNumbers" : "TEL. 27 23 57 23 52",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 23,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DABOU",
+    "pharmacyName" : "PHCIE DES LAGUNES",
+    "pharmacistName" : "M. N'DIAYE ZOUBAYROU",
+    "phoneNumbers" : "TEL. 27 23 57 21 45",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 24,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DANANE",
+    "pharmacyName" : "PHCIE DU PONT DE LIANES",
+    "pharmacistName" : "M. DRO SIENI ALBERT",
+    "phoneNumbers" : "TEL. 07 09 61 00 00",
+    "location" : "01 01 35 24 39",
+    "commune" : null,
+    "pharmacyId" : 25,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DALOA",
+    "pharmacyName" : "PHCIE DU PARVIS",
+    "pharmacistName" : "M. AMANI KOFFI ALBERT",
+    "phoneNumbers" : "TEL. 27 32 78 70 57",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 26,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DALOA",
+    "pharmacyName" : "PHCIE FATIMA ORLY",
+    "pharmacistName" : "MME ALLOU YABA RENEE EPSE DIE",
+    "phoneNumbers" : "TEL. 07 00 11 00 25",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 27,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DALOA",
+    "pharmacyName" : "PHCIE DES ANTILOPES",
+    "pharmacistName" : "M. BAMBA INZA",
+    "phoneNumbers" : "TEL. 27 32 78 80 48",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 28,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DALOA",
+    "pharmacyName" : "PHCIE FLOREL( NOUVELLE)",
+    "pharmacistName" : "M. KRA YAO FERDINAND",
+    "phoneNumbers" : "TEL. 27 32 78 05 32",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 29,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DALOA",
+    "pharmacyName" : "PHCIE PALOMA",
+    "pharmacistName" : "M. TAPE LEGREHOUAN",
+    "phoneNumbers" : "TEL. 05 44 04 44 16",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 30,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DIEGONEFLA",
+    "pharmacyName" : "PHCIE HAMANY",
+    "pharmacistName" : "M. KOUADIO ANICET",
+    "phoneNumbers" : "TEL. 27 24 58 15 01",
+    "location" : "07 11 96 68 54",
+    "commune" : null,
+    "pharmacyId" : 31,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DUEKOUE",
+    "pharmacyName" : "PHCIE SAINTE MARIE",
+    "pharmacistName" : "M. SERI GUY GHADOUT",
+    "phoneNumbers" : "TEL. 27 32 76 09 32",
+    "location" : "27 32 76 36 76",
+    "commune" : null,
+    "pharmacyId" : 32,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DUEKOUE",
+    "pharmacyName" : "PHCIE AHOUKOUA",
+    "pharmacistName" : "M. TRA BI VANIE ALAIN",
+    "phoneNumbers" : "TEL. 01 49 52 74 20",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 33,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DUEKOUE",
+    "pharmacyName" : "PHCIE DU DIALOGUE",
+    "pharmacistName" : "M. AHOUTY JEROME.",
+    "phoneNumbers" : "TEL. 27 32 76 31 77",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 34,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DUEKOUE",
+    "pharmacyName" : "PHCIE KAMELIA LA GRACE",
+    "pharmacistName" : "M. JEAN JONAS KOUADIO",
+    "phoneNumbers" : "TEL. 27 35 96 81 58",
+    "location" : "07 99 02 69 48/05 66 24 36 36",
+    "commune" : null,
+    "pharmacyId" : 35,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DUEKOUE",
+    "pharmacyName" : "PHCIE MODERNE DE BRIBORE",
+    "pharmacistName" : "M. TANOH ERIC KOUAME",
+    "phoneNumbers" : "TEL. 07 57 84 84 76",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 36,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DUEKOUE",
+    "pharmacyName" : "PHCIE DE LA PAIX DUEKOUE",
+    "pharmacistName" : "M. KONE HERVE BONAVENTURE",
+    "phoneNumbers" : "TEL. 07 14 25 77 67",
+    "location" : "07 15 87 87 87",
+    "commune" : null,
+    "pharmacyId" : 37,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "DUEKOUE",
+    "pharmacyName" : "PHCIE MASSEBA",
+    "pharmacistName" : "MME DIOMANDE MAMOUIDE",
+    "phoneNumbers" : "TEL. 27 21 79 86 38",
+    "location" : "07 09 51 35 03/05 00 14 82 82",
+    "commune" : null,
+    "pharmacyId" : 38,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  } ],
+  "errorMessage" : null
+}
+--------------------------------------------------------------------------------

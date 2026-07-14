@@ -1,0 +1,222 @@
+================================================================================
+EXTRACTION DES DONNÉES - FICHIER DE GARDE
+================================================================================
+Fichier source: WhatsApp Image 2026-01-08 at 11.40.39 (1).jpeg
+Date d'extraction: 11/01/2026 15:26:52
+ID du fichier: 16
+Statut: COMPLETED
+Pharmacies trouvées: 20
+Gardes créées: 13
+================================================================================
+
+DONNÉES JSON:
+--------------------------------------------------------------------------------
+{
+  "dutyFileId" : 16,
+  "status" : "COMPLETED",
+  "pharmaciesFound" : 20,
+  "dutiesCreated" : 13,
+  "pharmacies" : [ {
+    "zone" : "SOUS SECTION AZAGUIE",
+    "pharmacyName" : "PHCIE ASET LA DIVINE",
+    "pharmacistName" : null,
+    "phoneNumbers" : null,
+    "location" : "MME N'GUESSAN AMOUA- TEL 01 02 08 48 74/",
+    "commune" : null,
+    "pharmacyId" : 96,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION AZAGUIE",
+    "pharmacyName" : "PHCIE REINE DES ANGES",
+    "pharmacistName" : "M KOFFI CHRISTIAN",
+    "phoneNumbers" : "TEL 05 06 82 55 78",
+    "location" : "01 02 98 43 48",
+    "commune" : null,
+    "pharmacyId" : 97,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "AZAGUIE GARE CARREFOUR MARCHE",
+    "pharmacyName" : "PHCIE ASET LA DIVINE",
+    "pharmacistName" : null,
+    "phoneNumbers" : null,
+    "location" : "MME N'GUESSAN AMOUA- TEL 01 02 08 48 74/",
+    "commune" : null,
+    "pharmacyId" : 96,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "AZAGUIE GARE CARREFOUR MARCHE",
+    "pharmacyName" : "PHCIE REINE DES ANGES",
+    "pharmacistName" : "M KOFFI CHRISTIAN",
+    "phoneNumbers" : "TEL 05 06 82 55 78",
+    "location" : "01 02 98 43 48",
+    "commune" : null,
+    "pharmacyId" : 97,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "AZAGUIE GARE CARREFOUR MARCHE",
+    "pharmacyName" : "PHCIE ASET LA DIVINE",
+    "pharmacistName" : null,
+    "phoneNumbers" : null,
+    "location" : "MME N'GUESSAN AMOUA- TEL 01 02 08 48 74/",
+    "commune" : null,
+    "pharmacyId" : 96,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION DE BONDOUKOU",
+    "pharmacyName" : "PHCIE DU ZANZAN",
+    "pharmacistName" : "M. AFFRE KOUASSI FELIX",
+    "phoneNumbers" : "TEL. 27 35 91 56 09",
+    "location" : "07 07 02 92 64",
+    "commune" : null,
+    "pharmacyId" : 98,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION DE BONDOUKOU",
+    "pharmacyName" : "PHCIE NOTRE DAME DE BONDOUKOU",
+    "pharmacistName" : "MME KOUAME ANON SENDRA MARLENE",
+    "phoneNumbers" : "TEL.07 99 29 93 63",
+    "location" : "05 01 65 16 18/",
+    "commune" : null,
+    "pharmacyId" : 99,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION DE BONDOUKOU",
+    "pharmacyName" : "PHCIE NOUVELLE",
+    "pharmacistName" : "M. AGOH ROLAND",
+    "phoneNumbers" : "TEL 27 35 91 52 61",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 100,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION DE BONDOUKOU",
+    "pharmacyName" : "PHCIE BONDOUKOU",
+    "pharmacistName" : null,
+    "phoneNumbers" : "MARCHE",
+    "location" : "M. QUATTARA AUGUSTE - TEL. 27 35 90 57 89 / 07 58 68 23 51",
+    "commune" : null,
+    "pharmacyId" : 101,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION DE BONDOUKOU",
+    "pharmacyName" : "PHCIE CHOQUET (NLLE)",
+    "pharmacistName" : "MME ZOGUEI OLGA EPSE PRAO",
+    "phoneNumbers" : "TEL. 27 35 91 51 51",
+    "location" : "01 03 64 20 99",
+    "commune" : null,
+    "pharmacyId" : 102,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION DE BONDOUKOU",
+    "pharmacyName" : "PHCIE DU LYCEE",
+    "pharmacistName" : "M. DIE OFFEY JUSTE",
+    "phoneNumbers" : "TEL. 07 77 25 57 30",
+    "location" : "01 41 40 80 92/EN FACE DU LYCEE",
+    "commune" : null,
+    "pharmacyId" : 103,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION DE BONDOUKOU",
+    "pharmacyName" : "PHCIE DU ZANZAN",
+    "pharmacistName" : "M. AFFRE KOUASSI FELIX",
+    "phoneNumbers" : "TEL. 27 35 91 56 09",
+    "location" : "07 07 02 92 64",
+    "commune" : null,
+    "pharmacyId" : 98,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION DE BONDOUKOU",
+    "pharmacyName" : "PHCIE NOTRE DAME DE BONDOUKOU",
+    "pharmacistName" : null,
+    "phoneNumbers" : "07 99 29 93",
+    "location" : "05 01 65 16 18 / QUARTIER ZANZAN CARREFOUR RUE PRINCESSE",
+    "commune" : null,
+    "pharmacyId" : 99,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION DE BONDOUKOU",
+    "pharmacyName" : "PHCIE NOUVELLE",
+    "pharmacistName" : "M. AGOH ROLAND",
+    "phoneNumbers" : "TEL 27 35 91 52 61",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 100,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION DE BONDOUKOU",
+    "pharmacyName" : "PHCIE BONDOUKOU",
+    "pharmacistName" : null,
+    "phoneNumbers" : "MARCHE",
+    "location" : "M. OUATTARA AUGUSTE - TEL. 27 35 90 57 89/07 58 68 23 51",
+    "commune" : null,
+    "pharmacyId" : 101,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION OUME",
+    "pharmacyName" : "PHCIE D'OUME",
+    "pharmacistName" : "MME HADDAD ISMELDA",
+    "phoneNumbers" : "TEL. 27 30 68 40 38",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 104,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION OUME",
+    "pharmacyName" : "PHCIE CENTRALE",
+    "pharmacistName" : "M. RICHMOND PIERRE MARIE",
+    "phoneNumbers" : "TEL. 27 30 68 41 78",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 105,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION OUME",
+    "pharmacyName" : "PHCIE DE LA TENE",
+    "pharmacistName" : "M. YAPO GONTRAN OCTAVE",
+    "phoneNumbers" : "TEL. 01 40 21 23 22",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 106,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION OUME",
+    "pharmacyName" : "PHCIE SOURCE DE VIE",
+    "pharmacistName" : "M. ESSE ABLE CYRILLE",
+    "phoneNumbers" : "TEL. 07 67 33 81 31",
+    "location" : "27 21 74 86 39",
+    "commune" : null,
+    "pharmacyId" : 107,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SOUS SECTION OUME",
+    "pharmacyName" : "PHCIE NOTRE DAME DES VICTOIRES",
+    "pharmacistName" : "MME N'ZUE COLETTE",
+    "phoneNumbers" : "TEL.05 64 30 35 35",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 108,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  } ],
+  "errorMessage" : null
+}
+--------------------------------------------------------------------------------

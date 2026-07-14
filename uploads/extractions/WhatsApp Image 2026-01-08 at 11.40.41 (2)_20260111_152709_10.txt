@@ -1,0 +1,222 @@
+================================================================================
+EXTRACTION DES DONNÉES - FICHIER DE GARDE
+================================================================================
+Fichier source: WhatsApp Image 2026-01-08 at 11.40.41 (2).jpeg
+Date d'extraction: 11/01/2026 15:27:09
+ID du fichier: 10
+Statut: COMPLETED
+Pharmacies trouvées: 20
+Gardes créées: 19
+================================================================================
+
+DONNÉES JSON:
+--------------------------------------------------------------------------------
+{
+  "dutyFileId" : 10,
+  "status" : "COMPLETED",
+  "pharmaciesFound" : 20,
+  "dutiesCreated" : 19,
+  "pharmacies" : [ {
+    "zone" : "SECTION DE YOPOUGON",
+    "pharmacyName" : "PHCIE NOTRE DAME DES VICTOIRES",
+    "pharmacistName" : "MME NIAMKEY MARGUERITE",
+    "phoneNumbers" : "MARIE AURORE TEL. 07 57 27 04 45",
+    "location" : "07 78 97 32 75/",
+    "commune" : null,
+    "pharmacyId" : 108,
+    "existsInDatabase" : true,
+    "confidence" : 0.9
+  }, {
+    "zone" : "SECTION DE YOPOUGON",
+    "pharmacyName" : "PHCIE ST ETIENNE (NOUVELLE)",
+    "pharmacistName" : "M. AMOAKON EBRETCHE HERVE GERARD",
+    "phoneNumbers" : "TEL. 01 01 13 24 13",
+    "location" : "07 69 50 19 69",
+    "commune" : null,
+    "pharmacyId" : 202,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "ALLOKOI PK 23",
+    "pharmacyName" : "PHCIE MARIAMA D'ALLOKOI",
+    "pharmacistName" : "MME SOUMAHORO AWA",
+    "phoneNumbers" : "TEL. 07 98 69 13 55",
+    "location" : "05 74 69 22 25",
+    "commune" : null,
+    "pharmacyId" : 203,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE DE LA MAIRIE",
+    "pharmacistName" : "MME N'GUESSAN EUPHRASIE",
+    "phoneNumbers" : "TEL. 27 23 52 43 06",
+    "location" : "05 05 63 36 43",
+    "commune" : null,
+    "pharmacyId" : 204,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE ST ANGE EMMANUEL",
+    "pharmacistName" : null,
+    "phoneNumbers" : "27 23 48 61",
+    "location" : "01 01 07 48 53/05 65 76 10 27/YOPOUGON ATTIE TERMINUS BUS 47 ENTRE LE",
+    "commune" : null,
+    "pharmacyId" : 205,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE ZONE MICAO",
+    "pharmacistName" : "MME VANGAH HENRIETTE",
+    "phoneNumbers" : "TEL. 01 52 28 22 81",
+    "location" : "01 52 10 32 60/01 52 10 32 59",
+    "commune" : null,
+    "pharmacyId" : 206,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE CARREFOUR GHANDI",
+    "pharmacistName" : "M CAMANAND FERDINAND",
+    "phoneNumbers" : "TEL. 27 23 52 74 43",
+    "location" : "01 40 95 40 69",
+    "commune" : null,
+    "pharmacyId" : 207,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE ANADOR",
+    "pharmacistName" : "M. KOUASSI KOUAME",
+    "phoneNumbers" : "TEL. 07 09 59 02 14",
+    "location" : "01 01 35 08 36",
+    "commune" : null,
+    "pharmacyId" : 208,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE SACRE COEUR",
+    "pharmacistName" : "MME ATTIA MARIE LAURENCE",
+    "phoneNumbers" : "TEL. 01 01 44 45 13",
+    "location" : "07 57 04 99 90/ YOPOUGON",
+    "commune" : null,
+    "pharmacyId" : 209,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE NANKOKO",
+    "pharmacistName" : "MME AFOLABY C. ANNE",
+    "phoneNumbers" : "TEL. 27 23 45 24 80",
+    "location" : null,
+    "commune" : null,
+    "pharmacyId" : 210,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE DE SION IMME LEKADOU KORE SYLVIE N.",
+    "pharmacistName" : null,
+    "phoneNumbers" : "TEL. 07 59 97 73 72",
+    "location" : "01 02 73 33 34",
+    "commune" : null,
+    "pharmacyId" : 211,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE LEA",
+    "pharmacistName" : "MME ZODO MYRIAM",
+    "phoneNumbers" : "TEL. 27 23 46 02 15",
+    "location" : "07 48 20 27 86/NIANGON CARREFOUR CORLAY (EX",
+    "commune" : null,
+    "pharmacyId" : 212,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE ESPERANCE",
+    "pharmacistName" : "M BINDE N'DRAMAN AUGUSTIN",
+    "phoneNumbers" : "TEL. 27 23 46 94 23",
+    "location" : "04 37 82/",
+    "commune" : null,
+    "pharmacyId" : 213,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE ST JOSEPH ACADEMIE",
+    "pharmacistName" : "MME KOUADOU A. ADELINE",
+    "phoneNumbers" : "07 07 89 12",
+    "location" : "YOPOUGON ACADEMIE DES MERS A 50 M AVANT L'ECOLE ACADEMIE DES MERS",
+    "commune" : null,
+    "pharmacyId" : 214,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE DU NOUVEAU MARCHE DE PORT",
+    "pharmacistName" : null,
+    "phoneNumbers" : "BOUET II (EX VALORS)",
+    "location" : "M. VEHI OUA FULGENCE -",
+    "commune" : null,
+    "pharmacyId" : 215,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE ANANERAIE",
+    "pharmacistName" : "M. GALLE ATABLI ANSELME",
+    "phoneNumbers" : "TEL. 27 23 50 87 32",
+    "location" : "07 48 82 56 06/01 41 43 61 89",
+    "commune" : null,
+    "pharmacyId" : 216,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON",
+    "pharmacyName" : "PHCIE DU CENACLE M. BROU ARSENE",
+    "pharmacistName" : null,
+    "phoneNumbers" : "TEL. 27 23 52 23 23",
+    "location" : "07 09 76 67 67/01 02 56 55 80/",
+    "commune" : null,
+    "pharmacyId" : 217,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "FACE STATION PETRO IVOIRE",
+    "pharmacyName" : "PHCIE D'ANDOKOI",
+    "pharmacistName" : "M. DIARRA AROUNAN",
+    "phoneNumbers" : "TEL. 27 23 50 95 02",
+    "location" : "01 01 47 51 83/YOPOUGON ANDOKOI 1ER",
+    "commune" : null,
+    "pharmacyId" : 218,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "FACE STATION PETRO IVOIRE",
+    "pharmacyName" : "PHCIE DU 16EME (GRDE)",
+    "pharmacistName" : "MME KOUA KADIO LEATITIA",
+    "phoneNumbers" : "TEL. 07 79 44 55 03",
+    "location" : "27 24 38 17 60/",
+    "commune" : null,
+    "pharmacyId" : 219,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  }, {
+    "zone" : "YOPOUGON SICOGI",
+    "pharmacyName" : "PHCIE DU MILLIONNAIRE",
+    "pharmacistName" : "MME KONE MATOGOMA EPSE TOGBA",
+    "phoneNumbers" : null,
+    "location" : "TEL. 01 01 99 94 09/05 45 45 50 35",
+    "commune" : null,
+    "pharmacyId" : 220,
+    "existsInDatabase" : false,
+    "confidence" : 0.9
+  } ],
+  "errorMessage" : null
+}
+--------------------------------------------------------------------------------
