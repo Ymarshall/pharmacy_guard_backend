@@ -18,5 +18,7 @@ public interface DutyFileRepository extends JpaRepository<DutyFile, Long> {
 	List<DutyFile> findByDutyPeriodId(Long dutyPeriodId);
 
 	List<DutyFile> findByDutyPeriodIdOrderByUploadDateDesc(Long dutyPeriodId);
+
+	boolean existsByContentHashAndDutyPeriodIdAndStatus(String contentHash, Long dutyPeriodId, ProcessingStatus status);
 }
 

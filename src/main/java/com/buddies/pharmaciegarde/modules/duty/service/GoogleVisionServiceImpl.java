@@ -179,6 +179,11 @@ public class GoogleVisionServiceImpl implements GoogleVisionService {
 	}
 
 	@Override
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	@Override
 	public String extractTextFromImage(byte[] imageBytes) throws Exception {
 		if (!enabled) {
 			throw new IllegalStateException("Google Vision API n'est pas activé. " +

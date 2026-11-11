@@ -15,7 +15,7 @@ public class UserCreateDto {
 
 	@Schema(description = "Mot de passe", example = "password123", required = true)
 	@NotBlank(message = "Le mot de passe est obligatoire")
-	@Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
+	@Size(min = 6, max = 72, message = "Le mot de passe doit contenir entre 6 et 72 caractères")
 	private String password;
 
 	@Schema(description = "Prénom", example = "Jean", required = true)
@@ -27,6 +27,9 @@ public class UserCreateDto {
 	@NotBlank(message = "Le nom est obligatoire")
 	@Size(min = 2, max = 100, message = "Le nom doit contenir entre 2 et 100 caractères")
 	private String lastName;
+
+	@Schema(description = "Rôle optionnel : ADMIN ou OPERATOR. OPERATOR par défaut.", example = "OPERATOR")
+	private String role;
 
 	// Constructeurs
 	public UserCreateDto() {
@@ -63,6 +66,14 @@ public class UserCreateDto {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 }
 

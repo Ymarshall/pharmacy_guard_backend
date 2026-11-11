@@ -17,6 +17,7 @@ public class DutyPeriodUpdateDto {
 	private Boolean isCurrent;
 
 	@Schema(description = "Description de la période", example = "Garde de la semaine du 9 au 15 janvier 2026")
+	@jakarta.validation.constraints.Size(max = 2000, message = "La description ne doit pas dépasser 2000 caractères")
 	private String description;
 
 	// Constructeurs

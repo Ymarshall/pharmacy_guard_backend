@@ -3,9 +3,12 @@ package com.buddies.pharmaciegarde.modules.duty.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.buddies.pharmaciegarde.common.api.PageRequests;
+import com.buddies.pharmaciegarde.common.api.PageResponse;
 import com.buddies.pharmaciegarde.common.exception.ResourceNotFoundException;
 import com.buddies.pharmaciegarde.modules.duty.dto.DutyPeriodCreateDto;
 import com.buddies.pharmaciegarde.modules.duty.dto.DutyPeriodResponseDto;
@@ -28,6 +31,49 @@ public class DutyPeriodServiceImpl implements DutyPeriodService {
 	public List<DutyPeriodResponseDto> getAllPeriods() {
 		return dutyPeriodRepository.findAll().stream()
 				.map(this::mapToResponseDto)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PageResponse<DutyPeriodResponseDto> getPage(int page, int size, String search, String sort) {
+		org.springframework.data.domain.Sort parsed = com.buddies.pharmaciegarde.common.api.Sorts.parseOr(sort,
+				java.util.Set.of("id", "startDate", "endDate", "isCurrent"),
+				org.springframework.data.domain.Sort.by("id"));
+		if (search == null || search.isBlank()) {
+			return PageResponse.from(dutyPeriodRepository.findAll(PageRequests.of(page, size, parsed)).map(this::mapToResponseDto));
+		}
+		return PageResponse.from(com.buddies.pharmaciegarde.common.api.Slices.of(filterPeriods(search, parsed), page, size)
+				.map(this::mapToResponseDto));
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<DutyPeriodResponseDto> list(String search, String sort) {
+		org.springframework.data.domain.Sort parsed = com.buddies.pharmaciegarde.common.api.Sorts.parseOr(sort,
+				java.util.Set.of("id", "startDate", "endDate", "isCurrent"),
+				org.springframework.data.domain.Sort.by("id"));
+		return filterPeriods(search, parsed).stream().map(this::mapToResponseDto).collect(Collectors.toList());
+	}
+
+	private List<DutyPeriod> filterPeriods(String search, org.springframework.data.domain.Sort parsed) {
+		String field = com.buddies.pharmaciegarde.common.api.Sorts.field(parsed, "id");
+		boolean desc = com.buddies.pharmaciegarde.common.api.Sorts.isDescending(parsed);
+		java.util.Comparator<DutyPeriod> comparator = switch (field) {
+			case "startDate" -> java.util.Comparator.comparing(DutyPeriod::getStartDate, java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder()));
+			case "endDate" -> java.util.Comparator.comparing(DutyPeriod::getEndDate, java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder()));
+			case "isCurrent" -> java.util.Comparator.comparing(period -> Boolean.TRUE.equals(period.getIsCurrent()));
+			default -> java.util.Comparator.comparing(DutyPeriod::getId);
+		};
+		if (desc) {
+			comparator = comparator.reversed();
+		}
+		return dutyPeriodRepository.findAll().stream()
+				.filter(period -> com.buddies.pharmaciegarde.common.api.TextSearch.containsAny(search,
+						period.getDescription(),
+						period.getStartDate() == null ? null : period.getStartDate().toString(),
+						period.getEndDate() == null ? null : period.getEndDate().toString()))
+				.sorted(comparator)
 				.collect(Collectors.toList());
 	}
 

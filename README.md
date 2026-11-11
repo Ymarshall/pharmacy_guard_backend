@@ -108,12 +108,13 @@ CREATE DATABASE pharmacy_guarde_db;
 
 ### 3. Configurer la base de données
 
-Modifiez `src/main/resources/application.properties` :
+Modifiez les variables d'environnement (voir `.env.example`). Ne placez plus de secret dans `application.properties`.
 
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/pharmacy_guarde_db
-spring.datasource.username=postgres
-spring.datasource.password=votre_mot_de_passe
+```bash
+export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/pharmacy_guarde_db
+export SPRING_DATASOURCE_USERNAME=postgres
+export SPRING_DATASOURCE_PASSWORD=votre_mot_de_passe
+export JWT_SECRET=une-chaine-aleatoire-d-au-moins-32-caracteres
 ```
 
 ### 4. Configurer les services externes (optionnel)
@@ -124,12 +125,11 @@ Ajoutez votre clé API dans `application.properties` ou via une variable d'envir
 
 ```bash
 export GOOGLE_MAPS_API_KEY=votre_cle_api
+export GOOGLE_VISION_ENABLED=true
+export GOOGLE_APPLICATION_CREDENTIALS=/chemin/vers/votre-fichier.json
 ```
 
-Ou dans `application.properties` :
-```properties
-google.maps.api.key=votre_cle_api
-```
+Le fichier JSON de compte de service ne doit jamais être commité. Le nom `pharmacie-guarde-26c4adebd2b7.json` qui figurait dans la configuration a été retiré.
 
 #### Google Vision API (pour OCR)
 
@@ -519,9 +519,27 @@ Les pharmacies sont détectées comme doublons si elles ont :
 
 ## 🔒 Sécurité
 
-- Les mots de passe sont hashés avec BCrypt
-- CORS configuré pour les origines autorisées
-- Spring Security activé (actuellement en mode permissif pour le développement)
+- Mots de passe back-office hachés avec BCrypt (coût 12).
+- API stateless : jeton JWT `Authorization: Bearer` (pas de session, CSRF désactivé pour cette raison).
+- Lectures publiques conservées pour l'application mobile (pharmacies, proximité, urgences, zones, période courante).
+- Écritures back-office, utilisateurs, fichiers et signalements réservés aux rôles `ADMIN`, `OPERATOR` ou `CLIENT` selon l'endpoint.
+- CORS limité aux origines de `CORS_ALLOWED_ORIGINS`.
+- Swagger coupé avec le profil `prod` (`SWAGGER_ENABLED=false`).
+- Uploads contrôlés (signature réelle, 10 Mo, nom aléatoire, hors racine web).
+- Limite de tentatives sur les connexions.
+
+### Import d'affiches (prévisualisation)
+
+1. `POST /api/duty-files/upload`
+2. `POST /api/duty-files/{id}/preview` — lignes, score, alternatives, sans créer de garde
+3. L'administrateur corrige
+4. `POST /api/duty-files/{id}/confirm` — création de masse, doublons ignorés
+
+`POST /api/duty-files/{id}/process` ne crée plus automatiquement les pharmacies inconnues. Passer `autoCreateUnknown=true` pour les lignes sans aucun candidat proche. Les lignes ambiguës ne sont jamais créées automatiquement. `POST /api/duty-files/{id}/process-async` lance le même traitement hors du thread HTTP.
+
+### Pagination
+
+Sans `page` ni `size`, les listes restent des tableaux JSON. Avec l'un des deux paramètres, la réponse est `{ content, page, size, totalElements, totalPages }`.
 
 ## 📞 Support
 

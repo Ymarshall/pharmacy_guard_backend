@@ -13,7 +13,7 @@ public class PasswordUpdateDto {
 
 	@Schema(description = "Nouveau mot de passe", example = "newPassword123", required = true)
 	@NotBlank(message = "Le nouveau mot de passe est obligatoire")
-	@Size(min = 6, message = "Le nouveau mot de passe doit contenir au moins 6 caractères")
+	@Size(min = 6, max = 72, message = "Le nouveau mot de passe doit contenir entre 6 et 72 caractères")
 	private String newPassword;
 
 	// Constructeurs

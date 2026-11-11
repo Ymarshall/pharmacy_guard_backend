@@ -39,6 +39,9 @@ public class DutyFileResponseDto {
 	@Schema(description = "ID de la période de garde liée", example = "1")
 	private Long dutyPeriodId;
 
+	@Schema(description = "Empreinte SHA-256 du contenu, pour l'idempotence")
+	private String contentHash;
+
 	// Constructeurs
 	public DutyFileResponseDto() {
 	}
@@ -122,6 +125,14 @@ public class DutyFileResponseDto {
 
 	public void setDutyPeriodId(Long dutyPeriodId) {
 		this.dutyPeriodId = dutyPeriodId;
+	}
+
+	public String getContentHash() {
+		return contentHash;
+	}
+
+	public void setContentHash(String contentHash) {
+		this.contentHash = contentHash;
 	}
 }
 

@@ -7,9 +7,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.buddies.pharmaciegarde.common.api.PageRequests;
+import com.buddies.pharmaciegarde.common.api.PageResponse;
+import com.buddies.pharmaciegarde.common.api.Slices;
+import com.buddies.pharmaciegarde.common.api.Sorts;
+import com.buddies.pharmaciegarde.common.api.TextSearch;
 import com.buddies.pharmaciegarde.common.exception.ResourceNotFoundException;
 import com.buddies.pharmaciegarde.common.utils.DistanceCalculator;
 import com.buddies.pharmaciegarde.modules.pharmacy.dto.AssuranceResponseDto;
@@ -39,15 +47,17 @@ public class PharmacyServiceImpl implements PharmacyService {
 	private final DutyRepository dutyRepository;
 	private final DutyPeriodRepository dutyPeriodRepository;
 	private final PharmacyReviewRepository pharmacyReviewRepository;
+	private final PharmacyTrigramSearch pharmacyTrigramSearch;
 
 	public PharmacyServiceImpl(PharmacyRepository pharmacyRepository, AssuranceRepository assuranceRepository,
 			DutyRepository dutyRepository, DutyPeriodRepository dutyPeriodRepository,
-			PharmacyReviewRepository pharmacyReviewRepository) {
+			PharmacyReviewRepository pharmacyReviewRepository, PharmacyTrigramSearch pharmacyTrigramSearch) {
 		this.pharmacyRepository = pharmacyRepository;
 		this.assuranceRepository = assuranceRepository;
 		this.dutyRepository = dutyRepository;
 		this.dutyPeriodRepository = dutyPeriodRepository;
 		this.pharmacyReviewRepository = pharmacyReviewRepository;
+		this.pharmacyTrigramSearch = pharmacyTrigramSearch;
 	}
 
 	@Override
@@ -106,6 +116,104 @@ public class PharmacyServiceImpl implements PharmacyService {
 		return pharmacyRepository.findAll().stream()
 				.map(this::mapToResponseDto)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PageResponse<PharmacyResponseDto> getPage(int page, int size, String city, String commune, String statut,
+			String search, String sort) {
+		if (search == null || search.isBlank()) {
+			org.springframework.data.domain.Sort parsed = Sorts.parse(sort,
+					java.util.Set.of("id", "name", "city", "commune", "statut"), "name");
+			org.springframework.data.domain.Pageable pageable = PageRequests.of(page, size, parsed);
+			org.springframework.data.domain.Page<Pharmacy> result;
+			if (city != null) {
+				result = pharmacyRepository.findByCity(city, pageable);
+			} else if (commune != null) {
+				result = pharmacyRepository.findByCommune(commune, pageable);
+			} else if (statut != null) {
+				result = pharmacyRepository.findByStatut(PharmacyStatus.valueOf(statut.toUpperCase()), pageable);
+			} else {
+				result = pharmacyRepository.findAll(pageable);
+			}
+			return PageResponse.from(result.map(this::mapToResponseDto));
+		}
+		return PageResponse.from(Slices.of(selectPharmacies(city, commune, statut, search, sort), page, size)
+				.map(this::mapToResponseDto));
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<PharmacyResponseDto> list(String city, String commune, String statut, String search, String sort) {
+		return selectPharmacies(city, commune, statut, search, sort).stream()
+				.map(this::mapToResponseDto)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PageResponse<com.buddies.pharmaciegarde.modules.pharmacy.dto.PharmacySearchHit> searchForReview(String q,
+			String city, int page, int limit) {
+		String query = q == null ? "" : q.trim();
+		String foldedCity = TextSearch.fold(city);
+		List<com.buddies.pharmaciegarde.modules.pharmacy.dto.PharmacySearchHit> hits = pharmacyRepository.findAll()
+				.stream()
+				.filter(pharmacy -> foldedCity.isEmpty()
+						|| TextSearch.fold(pharmacy.getCity()).equals(foldedCity)
+						|| TextSearch.fold(pharmacy.getCommune()).equals(foldedCity)
+						|| TextSearch.contains(pharmacy.getCity(), city)
+						|| TextSearch.contains(pharmacy.getCommune(), city))
+				.map(pharmacy -> new com.buddies.pharmaciegarde.modules.pharmacy.dto.PharmacySearchHit(
+						pharmacy.getId(), pharmacy.getName(), pharmacy.getCity(), pharmacy.getCommune(),
+						pharmacy.getDistrict(), pharmacy.getPhone1(), reviewScore(query, pharmacy)))
+				.filter(hit -> query.isEmpty() || hit.score() >= 0.45)
+				.sorted(java.util.Comparator.comparingDouble(
+						com.buddies.pharmaciegarde.modules.pharmacy.dto.PharmacySearchHit::score).reversed()
+						.thenComparing(com.buddies.pharmaciegarde.modules.pharmacy.dto.PharmacySearchHit::name,
+								java.util.Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)))
+				.toList();
+		int safeLimit = limit <= 0 ? 20 : Math.min(limit, 50);
+		return PageResponse.from(Slices.of(hits, page, safeLimit));
+	}
+
+	private List<Pharmacy> selectPharmacies(String city, String commune, String statut, String search, String sort) {
+		org.springframework.data.domain.Sort parsed = Sorts.parse(sort,
+				java.util.Set.of("id", "name", "city", "commune", "statut"), "name");
+		if (search != null && !search.isBlank()) {
+			try {
+				List<Long> ids = pharmacyTrigramSearch.searchIds(search, city, commune, statut, parsed);
+				if (ids != null) {
+					java.util.Map<Long, Pharmacy> byId = pharmacyRepository.findAllById(ids).stream()
+							.collect(Collectors.toMap(Pharmacy::getId, pharmacy -> pharmacy));
+					return ids.stream().map(byId::get).filter(java.util.Objects::nonNull).collect(Collectors.toList());
+				}
+			} catch (RuntimeException ex) {
+				org.slf4j.LoggerFactory.getLogger(PharmacyServiceImpl.class)
+						.warn("Recherche trigram indisponible, repli Java : {}", ex.getMessage());
+			}
+		}
+		PharmacyStatus status = statut == null || statut.isBlank() ? null : PharmacyStatus.valueOf(statut.toUpperCase());
+		return pharmacyRepository.findAll(parsed).stream()
+				.filter(pharmacy -> city == null || city.isBlank() || TextSearch.fold(pharmacy.getCity()).equals(TextSearch.fold(city)))
+				.filter(pharmacy -> commune == null || commune.isBlank()
+						|| TextSearch.fold(pharmacy.getCommune()).equals(TextSearch.fold(commune)))
+				.filter(pharmacy -> status == null || pharmacy.getStatut() == status)
+				.filter(pharmacy -> TextSearch.containsAny(search, pharmacy.getName(), pharmacy.getCity(),
+						pharmacy.getCommune(), pharmacy.getDistrict(), pharmacy.getPhone1()))
+				.collect(Collectors.toList());
+	}
+
+	private double reviewScore(String query, Pharmacy pharmacy) {
+		if (query.isBlank()) {
+			return 1;
+		}
+		String foldedName = com.buddies.pharmaciegarde.modules.duty.matching.PharmacyNameNormalizer.fold(pharmacy.getName());
+		String foldedQuery = com.buddies.pharmaciegarde.modules.duty.matching.PharmacyNameNormalizer.fold(query);
+		double score = com.buddies.pharmaciegarde.modules.duty.matching.PharmacyMatcher.jaroWinkler(foldedQuery, foldedName);
+		if (!foldedQuery.isEmpty() && foldedName.contains(foldedQuery)) {
+			score = Math.max(score, 0.9);
+		}
+		return Math.round(score * 1000.0) / 1000.0;
 	}
 
 	@Override

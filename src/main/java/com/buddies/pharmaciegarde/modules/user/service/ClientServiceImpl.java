@@ -3,10 +3,17 @@ package com.buddies.pharmaciegarde.modules.user.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.buddies.pharmaciegarde.common.api.PageRequests;
+import com.buddies.pharmaciegarde.common.api.PageResponse;
 import com.buddies.pharmaciegarde.common.exception.ResourceNotFoundException;
+import com.buddies.pharmaciegarde.config.security.AuthPrincipal;
+import com.buddies.pharmaciegarde.config.security.JwtService;
+import com.buddies.pharmaciegarde.config.security.SecurityUtils;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientCreateDto;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientLoginDto;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientLoginResponseDto;
@@ -21,9 +28,11 @@ import com.buddies.pharmaciegarde.modules.user.repository.ClientRepository;
 public class ClientServiceImpl implements ClientService {
 
 	private final ClientRepository clientRepository;
+	private final JwtService jwtService;
 
-	public ClientServiceImpl(ClientRepository clientRepository) {
+	public ClientServiceImpl(ClientRepository clientRepository, JwtService jwtService) {
 		this.clientRepository = clientRepository;
+		this.jwtService = jwtService;
 	}
 
 	@Override
@@ -72,6 +81,52 @@ public class ClientServiceImpl implements ClientService {
 	@Transactional(readOnly = true)
 	public List<ClientResponseDto> getAll() {
 		return clientRepository.findAll().stream().map(this::mapToResponseDto).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public com.buddies.pharmaciegarde.common.api.PageResponse<ClientResponseDto> getPage(int page, int size,
+			String search, String sort) {
+		org.springframework.data.domain.Sort parsed = com.buddies.pharmaciegarde.common.api.Sorts.parseOr(sort,
+				java.util.Set.of("id", "phone", "firstName", "lastName", "email"),
+				org.springframework.data.domain.Sort.by("id"));
+		if (search == null || search.isBlank()) {
+			return com.buddies.pharmaciegarde.common.api.PageResponse.from(
+					clientRepository.findAll(com.buddies.pharmaciegarde.common.api.PageRequests.of(page, size, parsed))
+							.map(this::mapToResponseDto));
+		}
+		return com.buddies.pharmaciegarde.common.api.PageResponse.from(
+				com.buddies.pharmaciegarde.common.api.Slices.of(filterClients(search, parsed), page, size)
+						.map(this::mapToResponseDto));
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<ClientResponseDto> list(String search, String sort) {
+		org.springframework.data.domain.Sort parsed = com.buddies.pharmaciegarde.common.api.Sorts.parseOr(sort,
+				java.util.Set.of("id", "phone", "firstName", "lastName", "email"),
+				org.springframework.data.domain.Sort.by("id"));
+		return filterClients(search, parsed).stream().map(this::mapToResponseDto).collect(Collectors.toList());
+	}
+
+	private List<Client> filterClients(String search, org.springframework.data.domain.Sort parsed) {
+		String field = com.buddies.pharmaciegarde.common.api.Sorts.field(parsed, "id");
+		boolean desc = com.buddies.pharmaciegarde.common.api.Sorts.isDescending(parsed);
+		java.util.Comparator<Client> comparator = switch (field) {
+			case "phone" -> java.util.Comparator.comparing(Client::getPhone, java.util.Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+			case "firstName" -> java.util.Comparator.comparing(Client::getFirstName, java.util.Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+			case "lastName" -> java.util.Comparator.comparing(Client::getLastName, java.util.Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+			case "email" -> java.util.Comparator.comparing(Client::getEmail, java.util.Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+			default -> java.util.Comparator.comparing(Client::getId);
+		};
+		if (desc) {
+			comparator = comparator.reversed();
+		}
+		return clientRepository.findAll().stream()
+				.filter(client -> com.buddies.pharmaciegarde.common.api.TextSearch.containsAny(search, client.getPhone(),
+						client.getEmail(), client.getFirstName(), client.getLastName()))
+				.sorted(comparator)
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -128,12 +183,16 @@ public class ClientServiceImpl implements ClientService {
 		// Créer la réponse avec uniquement les informations du client
 		ClientLoginResponseDto response = new ClientLoginResponseDto();
 		response.setClient(mapToResponseDto(client));
-
+		response.setToken(jwtService.generate(new AuthPrincipal(client.getId(), client.getPhone(),
+				AuthPrincipal.ROLE_CLIENT, AuthPrincipal.KIND_CLIENT)));
+		response.setTokenType("Bearer");
+		response.setExpiresInSeconds(jwtService.getExpirationSeconds());
 		return response;
 	}
 
 	@Override
 	public ClientResponseDto updateLocation(Long id, LocationUpdateDto locationUpdateDto) {
+		SecurityUtils.assertClientSelfOrBackoffice(id);
 		Client client = clientRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Client", id));
 
@@ -158,7 +217,11 @@ public class ClientServiceImpl implements ClientService {
 	private ClientResponseDto mapToResponseDto(Client client) {
 		ClientResponseDto dto = new ClientResponseDto();
 		dto.setId(client.getId());
+		dto.setEmail(client.getEmail());
 		dto.setPhone(client.getPhone());
+		dto.setFirstName(client.getFirstName());
+		dto.setLastName(client.getLastName());
+		dto.setProviderType(client.getProviderType());
 		dto.setLatitude(client.getLatitude());
 		dto.setLongitude(client.getLongitude());
 		dto.setIsActive(client.getIsActive());

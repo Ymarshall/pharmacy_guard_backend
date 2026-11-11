@@ -34,6 +34,15 @@ public interface DutyService {
 
 	PdfProcessingResultDto processPdfFile(Long dutyFileId);
 
+	PdfProcessingResultDto processPdfFile(Long dutyFileId, boolean autoCreateUnknown);
+
+	com.buddies.pharmaciegarde.common.api.PageResponse<DutyResponseDto> getPage(int page, int size, String search,
+			String sort);
+
+	List<DutyResponseDto> list(String search, String sort);
+
+	com.buddies.pharmaciegarde.common.api.PageResponse<DutyFileResponseDto> getFilesPage(int page, int size);
+
 	List<DutyFileResponseDto> getAllDutyFiles();
 
 	List<DutyFileResponseDto> getDutyFilesByPeriodId(Long dutyPeriodId);

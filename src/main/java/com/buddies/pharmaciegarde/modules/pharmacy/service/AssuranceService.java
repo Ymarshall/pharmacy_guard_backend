@@ -13,6 +13,8 @@ public interface AssuranceService {
 
 	List<AssuranceResponseDto> getAll();
 
+	com.buddies.pharmaciegarde.common.api.PageResponse<AssuranceResponseDto> getPage(int page, int size);
+
 	AssuranceResponseDto update(Long id, AssuranceCreateDto assuranceCreateDto);
 
 	void delete(Long id);

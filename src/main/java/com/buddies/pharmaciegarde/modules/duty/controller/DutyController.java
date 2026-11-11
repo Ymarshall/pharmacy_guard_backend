@@ -71,7 +71,17 @@ public class DutyController {
 			@ApiResponse(responseCode = "200", description = "Liste des gardes récupérée avec succès")
 	})
 	@GetMapping
-	public ResponseEntity<List<DutyResponseDto>> getAll() {
+	public ResponseEntity<?> getAll(
+			@Parameter(description = "Index de page. Absent = liste complète historique.") @RequestParam(required = false) Integer page,
+			@Parameter(description = "Taille de page, max 100") @RequestParam(required = false) Integer size,
+			@Parameter(description = "Recherche insensible à la casse et aux accents (nom, ville, statut)") @RequestParam(required = false) String search,
+			@Parameter(description = "Tri : id, status, createdAt. Format champ,asc|desc") @RequestParam(required = false) String sort) {
+		if (page != null || size != null) {
+			return ResponseEntity.ok(dutyService.getPage(page == null ? 0 : page, size == null ? 20 : size, search, sort));
+		}
+		if ((search != null && !search.isBlank()) || (sort != null && !sort.isBlank())) {
+			return ResponseEntity.ok(dutyService.list(search, sort));
+		}
 		return ResponseEntity.ok(dutyService.getAll());
 	}
 

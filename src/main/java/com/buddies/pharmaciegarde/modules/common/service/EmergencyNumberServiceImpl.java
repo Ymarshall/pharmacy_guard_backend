@@ -3,9 +3,12 @@ package com.buddies.pharmaciegarde.modules.common.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.buddies.pharmaciegarde.common.api.PageRequests;
+import com.buddies.pharmaciegarde.common.api.PageResponse;
 import com.buddies.pharmaciegarde.common.exception.ResourceNotFoundException;
 import com.buddies.pharmaciegarde.modules.common.dto.EmergencyNumberCreateDto;
 import com.buddies.pharmaciegarde.modules.common.dto.EmergencyNumberResponseDto;
@@ -60,6 +63,13 @@ public class EmergencyNumberServiceImpl implements EmergencyNumberService {
 		return emergencyNumberRepository.findAll().stream()
 				.map(this::mapToResponseDto)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PageResponse<EmergencyNumberResponseDto> getPage(int page, int size) {
+		Page<EmergencyNumber> result = emergencyNumberRepository.findAll(PageRequests.of(page, size));
+		return PageResponse.from(result.map(this::mapToResponseDto));
 	}
 
 	@Override

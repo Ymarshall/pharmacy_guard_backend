@@ -38,6 +38,7 @@ public class PharmacyReviewServiceImpl implements PharmacyReviewService {
 
 	@Override
 	public PharmacyReviewResponseDto createOrUpdate(PharmacyReviewCreateDto dto) {
+		com.buddies.pharmaciegarde.config.security.SecurityUtils.assertClientSelfOrBackoffice(dto.getClientId());
 		// Vérifier que la pharmacie existe
 		Pharmacy pharmacy = pharmacyRepository.findById(dto.getPharmacyId())
 				.orElseThrow(() -> new ResourceNotFoundException("Pharmacie", dto.getPharmacyId()));
@@ -71,6 +72,7 @@ public class PharmacyReviewServiceImpl implements PharmacyReviewService {
 
 	@Override
 	public PharmacyReviewResponseDto update(Long reviewId, Long clientId, PharmacyReviewCreateDto dto) {
+		com.buddies.pharmaciegarde.config.security.SecurityUtils.assertClientSelfOrBackoffice(clientId);
 		// Vérifier que le commentaire existe
 		PharmacyReview review = pharmacyReviewRepository.findById(reviewId)
 				.orElseThrow(() -> new ResourceNotFoundException("Commentaire", reviewId));
@@ -95,6 +97,7 @@ public class PharmacyReviewServiceImpl implements PharmacyReviewService {
 
 	@Override
 	public void delete(Long reviewId, Long clientId) {
+		com.buddies.pharmaciegarde.config.security.SecurityUtils.assertClientSelfOrBackoffice(clientId);
 		// Vérifier que le commentaire existe
 		PharmacyReview review = pharmacyReviewRepository.findById(reviewId)
 				.orElseThrow(() -> new ResourceNotFoundException("Commentaire", reviewId));

@@ -24,5 +24,10 @@ public interface GoogleVisionService {
 	 * @return Liste des pharmacies extraites
 	 */
 	List<ExtractedPharmacyDto> extractPharmaciesFromImage(byte[] imageBytes) throws Exception;
+
+	/**
+	 * @return true si Google Vision est activé dans la configuration
+	 */
+	boolean isEnabled();
 }
 

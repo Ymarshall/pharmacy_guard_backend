@@ -31,7 +31,12 @@ public class ZoneController {
 
 	@Operation(summary = "Récupérer toutes les zones", description = "Retourne la liste de toutes les zones")
 	@GetMapping
-	public ResponseEntity<List<ZoneResponseDto>> getAllZones() {
+	public ResponseEntity<?> getAllZones(
+			@RequestParam(required = false) Integer page,
+			@RequestParam(required = false) Integer size) {
+		if (page != null || size != null) {
+			return ResponseEntity.ok(zoneService.getPage(page == null ? 0 : page, size == null ? 20 : size));
+		}
 		List<ZoneResponseDto> zones = zoneService.getAllZones();
 		return ResponseEntity.ok(zones);
 	}

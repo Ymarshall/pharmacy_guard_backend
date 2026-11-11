@@ -29,8 +29,11 @@ public class ExtractedPharmacyDto {
 	@Schema(description = "Indique si la pharmacie existe déjà dans la base", example = "true")
 	private Boolean existsInDatabase;
 
-	@Schema(description = "Confiance de l'extraction (0.0 à 1.0)", example = "0.95")
+	@Schema(description = "Confiance de l'extraction ou du rapprochement (0.0 à 1.0)", example = "0.95")
 	private Double confidence;
+
+	@Schema(description = "Statut de rapprochement : MATCHED, AMBIGUOUS ou NOT_FOUND")
+	private String matchStatus;
 
 	// Constructeurs
 	public ExtractedPharmacyDto() {
@@ -116,6 +119,14 @@ public class ExtractedPharmacyDto {
 
 	public void setConfidence(Double confidence) {
 		this.confidence = confidence;
+	}
+
+	public String getMatchStatus() {
+		return matchStatus;
+	}
+
+	public void setMatchStatus(String matchStatus) {
+		this.matchStatus = matchStatus;
 	}
 }
 

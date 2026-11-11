@@ -13,6 +13,8 @@ public interface EmergencyNumberService {
 
 	List<EmergencyNumberResponseDto> getAll();
 
+	com.buddies.pharmaciegarde.common.api.PageResponse<EmergencyNumberResponseDto> getPage(int page, int size);
+
 	EmergencyNumberResponseDto update(Long id, EmergencyNumberCreateDto emergencyNumberCreateDto);
 
 	void delete(Long id);

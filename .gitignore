@@ -36,6 +36,11 @@ out/
 ### VS Code ###
 .vscode/
 
+### Secrets et fichiers uploadés ###
+.env
+uploads/
+*.log
+
 ### Google Cloud Credentials ###
 google-credentials.json
 *-credentials.json

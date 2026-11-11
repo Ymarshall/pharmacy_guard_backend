@@ -16,6 +16,11 @@ public interface ClientService {
 
 	List<ClientResponseDto> getAll();
 
+	com.buddies.pharmaciegarde.common.api.PageResponse<ClientResponseDto> getPage(int page, int size, String search,
+			String sort);
+
+	List<ClientResponseDto> list(String search, String sort);
+
 	ClientResponseDto update(Long id, ClientCreateDto clientCreateDto);
 
 	void delete(Long id);
