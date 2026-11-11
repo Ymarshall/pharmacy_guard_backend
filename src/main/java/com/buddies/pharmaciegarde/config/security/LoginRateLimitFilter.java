@@ -45,9 +45,7 @@ public class LoginRateLimitFilter extends OncePerRequestFilter {
 			return existing;
 		});
 		if (window.count > maxAttempts) {
-			response.setStatus(429);
-			response.setContentType("application/json");
-			response.getWriter().write(
+			SecurityJson.write(response, 429,
 					"{\"status\":\"TOO_MANY_REQUESTS\",\"statusCode\":429,\"message\":\"Trop de tentatives de connexion. Réessayez dans une minute.\"}");
 			return;
 		}
@@ -59,7 +57,9 @@ public class LoginRateLimitFilter extends OncePerRequestFilter {
 			return false;
 		}
 		String path = request.getRequestURI();
-		return "/api/auth/login".equals(path) || "/api/auth/client/login".equals(path);
+		return "/api/auth/login".equals(path)
+				|| "/api/auth/client/login".equals(path)
+				|| "/api/auth/client/register".equals(path);
 	}
 
 	private String clientKey(HttpServletRequest request) {

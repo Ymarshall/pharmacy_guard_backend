@@ -42,9 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 		} catch (JwtException | IllegalArgumentException ex) {
 			SecurityContextHolder.clearContext();
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.setContentType("application/json");
-			response.getWriter().write(
+			SecurityJson.write(response, HttpServletResponse.SC_UNAUTHORIZED,
 					"{\"status\":\"UNAUTHORIZED\",\"statusCode\":401,\"message\":\"Jeton d'authentification invalide ou expiré\"}");
 		}
 	}

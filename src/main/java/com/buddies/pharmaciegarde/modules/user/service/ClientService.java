@@ -5,12 +5,15 @@ import java.util.List;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientCreateDto;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientLoginDto;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientLoginResponseDto;
+import com.buddies.pharmaciegarde.modules.user.dto.ClientRegisterDto;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientResponseDto;
 import com.buddies.pharmaciegarde.modules.user.dto.LocationUpdateDto;
 
 public interface ClientService {
 
 	ClientResponseDto create(ClientCreateDto clientCreateDto);
+
+	ClientLoginResponseDto register(ClientRegisterDto clientRegisterDto);
 
 	ClientResponseDto getById(Long id);
 
