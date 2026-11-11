@@ -3,9 +3,12 @@ package com.buddies.pharmaciegarde.modules.duty.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.buddies.pharmaciegarde.common.api.PageRequests;
+import com.buddies.pharmaciegarde.common.api.PageResponse;
 import com.buddies.pharmaciegarde.common.exception.ResourceNotFoundException;
 import com.buddies.pharmaciegarde.modules.duty.dto.DutyPeriodCreateDto;
 import com.buddies.pharmaciegarde.modules.duty.dto.DutyPeriodResponseDto;
@@ -29,6 +32,13 @@ public class DutyPeriodServiceImpl implements DutyPeriodService {
 		return dutyPeriodRepository.findAll().stream()
 				.map(this::mapToResponseDto)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PageResponse<DutyPeriodResponseDto> getPage(int page, int size) {
+		Page<DutyPeriod> result = dutyPeriodRepository.findAll(PageRequests.of(page, size));
+		return PageResponse.from(result.map(this::mapToResponseDto));
 	}
 
 	@Override

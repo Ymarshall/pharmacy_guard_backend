@@ -69,11 +69,17 @@ public class PharmacyController {
 			@ApiResponse(responseCode = "200", description = "Liste des pharmacies récupérée avec succès")
 	})
 	@GetMapping
-	public ResponseEntity<List<PharmacyResponseDto>> getAll(
+	public ResponseEntity<?> getAll(
 			@Parameter(description = "Filtrer par ville") @RequestParam(required = false) String city,
 			@Parameter(description = "Filtrer par commune") @RequestParam(required = false) String commune,
-			@Parameter(description = "Filtrer par statut (ACTIF ou INACTIF)") @RequestParam(required = false) String statut) {
-		
+			@Parameter(description = "Filtrer par statut (ACTIF ou INACTIF)") @RequestParam(required = false) String statut,
+			@Parameter(description = "Index de page (à partir de 0). Avec size, la réponse devient un objet paginé.")
+			@RequestParam(required = false) Integer page,
+			@Parameter(description = "Taille de page (max 100). Sans page ni size, la liste complète historique est renvoyée.")
+			@RequestParam(required = false) Integer size) {
+		if (page != null || size != null) {
+			return ResponseEntity.ok(pharmacyService.getPage(page == null ? 0 : page, size == null ? 20 : size, city, commune, statut));
+		}
 		if (city != null) {
 			return ResponseEntity.ok(pharmacyService.getByCity(city));
 		}
@@ -83,7 +89,6 @@ public class PharmacyController {
 		if (statut != null) {
 			return ResponseEntity.ok(pharmacyService.getByStatut(statut));
 		}
-		
 		return ResponseEntity.ok(pharmacyService.getAll());
 	}
 

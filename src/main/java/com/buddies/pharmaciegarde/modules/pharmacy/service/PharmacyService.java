@@ -2,6 +2,7 @@ package com.buddies.pharmaciegarde.modules.pharmacy.service;
 
 import java.util.List;
 
+import com.buddies.pharmaciegarde.common.api.PageResponse;
 import com.buddies.pharmaciegarde.modules.pharmacy.dto.PharmacyCreateDto;
 import com.buddies.pharmaciegarde.modules.pharmacy.dto.PharmacyResponseDto;
 import com.buddies.pharmaciegarde.modules.pharmacy.dto.PharmacySearchDto;
@@ -14,6 +15,8 @@ public interface PharmacyService {
 	PharmacyResponseDto getById(Long id);
 
 	List<PharmacyResponseDto> getAll();
+
+	PageResponse<PharmacyResponseDto> getPage(int page, int size, String city, String commune, String statut);
 
 	PharmacyResponseDto update(Long id, PharmacyCreateDto pharmacyCreateDto);
 

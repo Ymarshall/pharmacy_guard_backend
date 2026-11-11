@@ -10,6 +10,8 @@ public interface DutyPeriodService {
 
 	List<DutyPeriodResponseDto> getAllPeriods();
 
+	com.buddies.pharmaciegarde.common.api.PageResponse<DutyPeriodResponseDto> getPage(int page, int size);
+
 	DutyPeriodResponseDto getPeriodById(Long id);
 
 	DutyPeriodResponseDto createPeriod(DutyPeriodCreateDto createDto);

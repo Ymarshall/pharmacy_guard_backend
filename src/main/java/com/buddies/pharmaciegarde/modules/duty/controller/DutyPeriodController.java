@@ -33,9 +33,13 @@ public class DutyPeriodController {
 
 	@Operation(summary = "Récupérer toutes les périodes de garde", description = "Retourne la liste de toutes les périodes de garde")
 	@GetMapping
-	public ResponseEntity<List<DutyPeriodResponseDto>> getAllPeriods() {
-		List<DutyPeriodResponseDto> periods = dutyPeriodService.getAllPeriods();
-		return ResponseEntity.ok(periods);
+	public ResponseEntity<?> getAllPeriods(
+			@RequestParam(required = false) Integer page,
+			@RequestParam(required = false) Integer size) {
+		if (page != null || size != null) {
+			return ResponseEntity.ok(dutyPeriodService.getPage(page == null ? 0 : page, size == null ? 20 : size));
+		}
+		return ResponseEntity.ok(dutyPeriodService.getAllPeriods());
 	}
 
 	@Operation(summary = "Récupérer la garde courante", description = "Retourne la période de garde marquée comme courante")

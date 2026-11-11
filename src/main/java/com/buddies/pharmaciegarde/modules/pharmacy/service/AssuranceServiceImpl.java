@@ -3,9 +3,14 @@ package com.buddies.pharmaciegarde.modules.pharmacy.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.buddies.pharmaciegarde.common.api.PageRequests;
+import com.buddies.pharmaciegarde.common.api.PageResponse;
 import com.buddies.pharmaciegarde.common.exception.ResourceNotFoundException;
 import com.buddies.pharmaciegarde.modules.pharmacy.dto.AssuranceCreateDto;
 import com.buddies.pharmaciegarde.modules.pharmacy.dto.AssuranceResponseDto;
@@ -23,6 +28,7 @@ public class AssuranceServiceImpl implements AssuranceService {
 	}
 
 	@Override
+	@CacheEvict(value = "assurances", allEntries = true)
 	public AssuranceResponseDto create(AssuranceCreateDto assuranceCreateDto) {
 		// Vérifier si une assurance avec le même nom existe déjà
 		if (assuranceRepository.existsByName(assuranceCreateDto.getName())) {
@@ -47,6 +53,7 @@ public class AssuranceServiceImpl implements AssuranceService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@Cacheable(value = "assurances", key = "'all'")
 	public List<AssuranceResponseDto> getAll() {
 		return assuranceRepository.findAll().stream()
 				.map(this::mapToResponseDto)
@@ -54,6 +61,14 @@ public class AssuranceServiceImpl implements AssuranceService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public PageResponse<AssuranceResponseDto> getPage(int page, int size) {
+		Page<Assurance> result = assuranceRepository.findAll(PageRequests.of(page, size));
+		return PageResponse.from(result.map(this::mapToResponseDto));
+	}
+
+	@Override
+	@CacheEvict(value = "assurances", allEntries = true)
 	public AssuranceResponseDto update(Long id, AssuranceCreateDto assuranceCreateDto) {
 		Assurance assurance = assuranceRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Assurance", id));
@@ -72,6 +87,7 @@ public class AssuranceServiceImpl implements AssuranceService {
 	}
 
 	@Override
+	@CacheEvict(value = "assurances", allEntries = true)
 	public void delete(Long id) {
 		if (!assuranceRepository.existsById(id)) {
 			throw new ResourceNotFoundException("Assurance", id);

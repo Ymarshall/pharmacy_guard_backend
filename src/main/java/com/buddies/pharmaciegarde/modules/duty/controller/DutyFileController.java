@@ -16,8 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.buddies.pharmaciegarde.modules.duty.dto.DutyFileResponseDto;
+import com.buddies.pharmaciegarde.modules.duty.dto.DutyImportConfirmRequest;
+import com.buddies.pharmaciegarde.modules.duty.dto.DutyImportConfirmResponse;
+import com.buddies.pharmaciegarde.modules.duty.dto.DutyImportPreviewResponse;
+import com.buddies.pharmaciegarde.modules.duty.dto.DutyJobResponse;
 import com.buddies.pharmaciegarde.modules.duty.dto.PdfProcessingResultDto;
 import com.buddies.pharmaciegarde.modules.duty.dto.TextExtractionResultDto;
+import com.buddies.pharmaciegarde.modules.duty.service.DutyImportService;
+import com.buddies.pharmaciegarde.modules.duty.service.DutyProcessingJobService;
 import com.buddies.pharmaciegarde.modules.duty.service.DutyService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +35,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/duty-files")
@@ -36,9 +43,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class DutyFileController {
 
 	private final DutyService dutyService;
+	private final DutyImportService dutyImportService;
+	private final DutyProcessingJobService dutyProcessingJobService;
 
-	public DutyFileController(DutyService dutyService) {
+	public DutyFileController(DutyService dutyService, DutyImportService dutyImportService,
+			DutyProcessingJobService dutyProcessingJobService) {
 		this.dutyService = dutyService;
+		this.dutyImportService = dutyImportService;
+		this.dutyProcessingJobService = dutyProcessingJobService;
 	}
 
 	@Operation(
@@ -117,8 +129,10 @@ public class DutyFileController {
 	})
 	@PostMapping("/{id}/process")
 	public ResponseEntity<PdfProcessingResultDto> processFile(
-			@Parameter(description = "ID du fichier à traiter", required = true) @PathVariable Long id) {
-		PdfProcessingResultDto result = dutyService.processPdfFile(id);
+			@Parameter(description = "ID du fichier à traiter", required = true) @PathVariable Long id,
+			@Parameter(description = "Crée les pharmacies inconnues (jamais les ambiguës). Faux par défaut.")
+			@RequestParam(defaultValue = "false") boolean autoCreateUnknown) {
+		PdfProcessingResultDto result = dutyService.processPdfFile(id, autoCreateUnknown);
 		return ResponseEntity.ok(result);
 	}
 
@@ -144,8 +158,44 @@ public class DutyFileController {
 			@ApiResponse(responseCode = "200", description = "Liste des fichiers récupérée avec succès")
 	})
 	@GetMapping
-	public ResponseEntity<List<DutyFileResponseDto>> getAllFiles() {
+	public ResponseEntity<?> getAllFiles(
+			@Parameter(description = "Index de page. Absent = liste complète.") @RequestParam(required = false) Integer page,
+			@Parameter(description = "Taille de page, max 100") @RequestParam(required = false) Integer size) {
+		if (page != null || size != null) {
+			return ResponseEntity.ok(dutyService.getFilesPage(page == null ? 0 : page, size == null ? 20 : size));
+		}
 		return ResponseEntity.ok(dutyService.getAllDutyFiles());
+	}
+
+	@Operation(summary = "Prévisualiser une affiche sans créer de gardes",
+			description = "Extrait les lignes, propose une pharmacie, un score et des alternatives. "
+					+ "Aucune garde n'est créée. À enchaîner avec POST /{id}/confirm.")
+	@PostMapping("/{id}/preview")
+	public ResponseEntity<DutyImportPreviewResponse> preview(@PathVariable Long id) {
+		return ResponseEntity.ok(dutyImportService.preview(id));
+	}
+
+	@Operation(summary = "Valider les lignes corrigées et créer les gardes",
+			description = "Crée les gardes en masse. Les doublons de la même période sont ignorés (idempotent). "
+					+ "Les lignes skip=true sont ignorées. createPharmacy=true crée une pharmacie absente du référentiel.")
+	@PostMapping("/{id}/confirm")
+	public ResponseEntity<DutyImportConfirmResponse> confirm(@PathVariable Long id,
+			@Valid @org.springframework.web.bind.annotation.RequestBody DutyImportConfirmRequest request) {
+		return ResponseEntity.ok(dutyImportService.confirm(id, request));
+	}
+
+	@Operation(summary = "Lancer le traitement historique en arrière-plan",
+			description = "Répond 202 avec un jobId. Consulter GET /api/duty-files/jobs/{jobId}. "
+					+ "Ne crée pas les pharmacies ambiguës ni inconnues.")
+	@PostMapping("/{id}/process-async")
+	public ResponseEntity<DutyJobResponse> processAsync(@PathVariable Long id) {
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(dutyProcessingJobService.enqueue(id));
+	}
+
+	@Operation(summary = "Statut d'un traitement asynchrone")
+	@GetMapping("/jobs/{jobId}")
+	public ResponseEntity<DutyJobResponse> job(@PathVariable String jobId) {
+		return ResponseEntity.ok(dutyProcessingJobService.get(jobId));
 	}
 
 	@Operation(summary = "Récupérer les fichiers d'une période de garde", 

@@ -10,6 +10,8 @@ public interface ZoneService {
 
 	List<ZoneResponseDto> getAllZones();
 
+	com.buddies.pharmaciegarde.common.api.PageResponse<ZoneResponseDto> getPage(int page, int size);
+
 	ZoneResponseDto getZoneById(Long id);
 
 	ZoneResponseDto createZone(ZoneCreateDto createDto);

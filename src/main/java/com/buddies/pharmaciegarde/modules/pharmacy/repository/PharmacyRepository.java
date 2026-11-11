@@ -3,6 +3,8 @@ package com.buddies.pharmaciegarde.modules.pharmacy.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,6 +23,12 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
 	List<Pharmacy> findByCommune(String commune);
 
 	List<Pharmacy> findByStatut(PharmacyStatus statut);
+
+	Page<Pharmacy> findByCity(String city, Pageable pageable);
+
+	Page<Pharmacy> findByCommune(String commune, Pageable pageable);
+
+	Page<Pharmacy> findByStatut(PharmacyStatus statut, Pageable pageable);
 
 	List<Pharmacy> findByCityAndStatut(String city, PharmacyStatus statut);
 
@@ -44,14 +52,10 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
 			"LOWER(p.district) LIKE LOWER(CONCAT('%', :search, '%')))")
 	List<Pharmacy> searchPharmacies(@Param("search") String search, @Param("name") String name, @Param("statut") PharmacyStatus statut);
 
-	// Recherche par nom, commune, ville et district (pour détecter les doublons)
-	// Utilisation d'une requête SQL native avec CAST pour gérer les colonnes bytea
-	@Query(value = "SELECT * FROM pharmacies WHERE " +
-			"LOWER(name::text) = LOWER(:name) AND " +
-			"LOWER(commune::text) = LOWER(:commune) AND " +
-			"LOWER(city::text) = LOWER(:city) AND " +
-			"((:district IS NULL AND district IS NULL) OR " +
-			"(:district IS NOT NULL AND district IS NOT NULL AND LOWER(district::text) = LOWER(:district)))",
+	@Query(value = "SELECT * FROM pharmacies WHERE lower(name) = lower(cast(:name as varchar)) AND "
+			+ "lower(commune) = lower(cast(:commune as varchar)) AND lower(city) = lower(cast(:city as varchar)) AND "
+			+ "((cast(:district as varchar) IS NULL AND district IS NULL) OR "
+			+ "(district IS NOT NULL AND lower(district) = lower(cast(:district as varchar))))",
 			nativeQuery = true)
 	Optional<Pharmacy> findByNameAndCommuneAndCityAndDistrict(
 			@Param("name") String name,

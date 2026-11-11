@@ -3,10 +3,17 @@ package com.buddies.pharmaciegarde.modules.user.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.buddies.pharmaciegarde.common.api.PageRequests;
+import com.buddies.pharmaciegarde.common.api.PageResponse;
 import com.buddies.pharmaciegarde.common.exception.ResourceNotFoundException;
+import com.buddies.pharmaciegarde.config.security.AuthPrincipal;
+import com.buddies.pharmaciegarde.config.security.JwtService;
+import com.buddies.pharmaciegarde.config.security.SecurityUtils;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientCreateDto;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientLoginDto;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientLoginResponseDto;
@@ -21,9 +28,11 @@ import com.buddies.pharmaciegarde.modules.user.repository.ClientRepository;
 public class ClientServiceImpl implements ClientService {
 
 	private final ClientRepository clientRepository;
+	private final JwtService jwtService;
 
-	public ClientServiceImpl(ClientRepository clientRepository) {
+	public ClientServiceImpl(ClientRepository clientRepository, JwtService jwtService) {
 		this.clientRepository = clientRepository;
+		this.jwtService = jwtService;
 	}
 
 	@Override
@@ -72,6 +81,13 @@ public class ClientServiceImpl implements ClientService {
 	@Transactional(readOnly = true)
 	public List<ClientResponseDto> getAll() {
 		return clientRepository.findAll().stream().map(this::mapToResponseDto).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PageResponse<ClientResponseDto> getPage(int page, int size) {
+		Page<Client> result = clientRepository.findAll(PageRequests.of(page, size, Sort.by("id")));
+		return PageResponse.from(result.map(this::mapToResponseDto));
 	}
 
 	@Override
@@ -128,12 +144,16 @@ public class ClientServiceImpl implements ClientService {
 		// Créer la réponse avec uniquement les informations du client
 		ClientLoginResponseDto response = new ClientLoginResponseDto();
 		response.setClient(mapToResponseDto(client));
-
+		response.setToken(jwtService.generate(new AuthPrincipal(client.getId(), client.getPhone(),
+				AuthPrincipal.ROLE_CLIENT, AuthPrincipal.KIND_CLIENT)));
+		response.setTokenType("Bearer");
+		response.setExpiresInSeconds(jwtService.getExpirationSeconds());
 		return response;
 	}
 
 	@Override
 	public ClientResponseDto updateLocation(Long id, LocationUpdateDto locationUpdateDto) {
+		SecurityUtils.assertClientSelfOrBackoffice(id);
 		Client client = clientRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Client", id));
 

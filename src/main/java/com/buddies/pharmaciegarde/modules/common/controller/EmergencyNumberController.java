@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.buddies.pharmaciegarde.modules.common.dto.EmergencyNumberCreateDto;
@@ -68,7 +69,12 @@ public class EmergencyNumberController {
 			@ApiResponse(responseCode = "200", description = "Liste des numéros d'urgence récupérée avec succès")
 	})
 	@GetMapping
-	public ResponseEntity<List<EmergencyNumberResponseDto>> getAll() {
+	public ResponseEntity<?> getAll(
+			@RequestParam(required = false) Integer page,
+			@RequestParam(required = false) Integer size) {
+		if (page != null || size != null) {
+			return ResponseEntity.ok(emergencyNumberService.getPage(page == null ? 0 : page, size == null ? 20 : size));
+		}
 		return ResponseEntity.ok(emergencyNumberService.getAll());
 	}
 

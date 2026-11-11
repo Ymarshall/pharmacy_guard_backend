@@ -3,6 +3,8 @@ package com.buddies.pharmaciegarde.modules.pharmacy.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.annotations.BatchSize;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -82,6 +84,7 @@ public class Pharmacy {
 	@Column(name = "location", nullable = false)
 	private String location;
 
+	@BatchSize(size = 50)
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 			name = "pharmacy_assurances",

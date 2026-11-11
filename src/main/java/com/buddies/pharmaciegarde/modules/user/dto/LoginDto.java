@@ -3,6 +3,7 @@ package com.buddies.pharmaciegarde.modules.user.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Schema(description = "Données pour l'authentification")
 public class LoginDto {
@@ -14,6 +15,7 @@ public class LoginDto {
 
 	@Schema(description = "Mot de passe", example = "password123", required = true)
 	@NotBlank(message = "Le mot de passe est obligatoire")
+	@Size(max = 72, message = "Le mot de passe ne doit pas dépasser 72 caractères")
 	private String password;
 
 	// Constructeurs

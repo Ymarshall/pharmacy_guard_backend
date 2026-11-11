@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.buddies.pharmaciegarde.modules.pharmacy.dto.AssuranceCreateDto;
@@ -68,7 +69,12 @@ public class AssuranceController {
 			@ApiResponse(responseCode = "200", description = "Liste des assurances récupérée avec succès")
 	})
 	@GetMapping
-	public ResponseEntity<List<AssuranceResponseDto>> getAll() {
+	public ResponseEntity<?> getAll(
+			@RequestParam(required = false) Integer page,
+			@RequestParam(required = false) Integer size) {
+		if (page != null || size != null) {
+			return ResponseEntity.ok(assuranceService.getPage(page == null ? 0 : page, size == null ? 20 : size));
+		}
 		return ResponseEntity.ok(assuranceService.getAll());
 	}
 

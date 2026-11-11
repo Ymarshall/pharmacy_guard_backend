@@ -2,6 +2,8 @@ package com.buddies.pharmaciegarde.modules.user.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,6 +39,10 @@ public class User {
 	@Size(min = 2, max = 100, message = "Le nom doit contenir entre 2 et 100 caractères")
 	@Column(name = "last_name", nullable = false)
 	private String lastName;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "role", nullable = false, length = 20)
+	private UserRole role = UserRole.ADMIN;
 
 	// Constructeurs
 	public User() {
@@ -88,6 +94,14 @@ public class User {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public UserRole getRole() {
+		return role;
+	}
+
+	public void setRole(UserRole role) {
+		this.role = role;
 	}
 }
 

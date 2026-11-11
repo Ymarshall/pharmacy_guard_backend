@@ -50,6 +50,9 @@ public class DutyFile {
 	@Column(name = "description", columnDefinition = "TEXT")
 	private String description; // Description optionnelle du fichier
 
+	@Column(name = "content_hash", length = 64)
+	private String contentHash;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "duty_period_id")
 	private DutyPeriod dutyPeriod; // Période de garde à laquelle ce fichier est lié
@@ -152,6 +155,14 @@ public class DutyFile {
 
 	public void setDutyPeriod(DutyPeriod dutyPeriod) {
 		this.dutyPeriod = dutyPeriod;
+	}
+
+	public String getContentHash() {
+		return contentHash;
+	}
+
+	public void setContentHash(String contentHash) {
+		this.contentHash = contentHash;
 	}
 
 	// Enum pour le statut de traitement

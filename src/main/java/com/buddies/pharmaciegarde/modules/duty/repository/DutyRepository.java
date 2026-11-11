@@ -2,6 +2,7 @@ package com.buddies.pharmaciegarde.modules.duty.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,10 +14,21 @@ import com.buddies.pharmaciegarde.modules.duty.model.DutyStatus;
 @Repository
 public interface DutyRepository extends JpaRepository<Duty, Long> {
 
+	@Override
+	@EntityGraph(attributePaths = {"pharmacy", "dutyPeriod", "dutyFile"})
+	List<Duty> findAll();
+
+	@Override
+	@EntityGraph(attributePaths = {"pharmacy", "dutyPeriod", "dutyFile"})
+	org.springframework.data.domain.Page<Duty> findAll(org.springframework.data.domain.Pageable pageable);
+
+	@EntityGraph(attributePaths = {"pharmacy", "dutyPeriod", "dutyFile"})
 	List<Duty> findByPharmacyId(Long pharmacyId);
 
+	@EntityGraph(attributePaths = {"pharmacy", "dutyPeriod", "dutyFile"})
 	List<Duty> findByDutyPeriodId(Long dutyPeriodId);
 
+	@EntityGraph(attributePaths = {"pharmacy", "dutyPeriod", "dutyFile"})
 	@Query("SELECT d FROM Duty d WHERE d.pharmacy.id = :pharmacyId AND d.dutyPeriod.id = :dutyPeriodId")
 	List<Duty> findByPharmacyIdAndDutyPeriodId(@Param("pharmacyId") Long pharmacyId,
 			@Param("dutyPeriodId") Long dutyPeriodId);

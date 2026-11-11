@@ -3,9 +3,14 @@ package com.buddies.pharmaciegarde.modules.common.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.buddies.pharmaciegarde.common.api.PageRequests;
+import com.buddies.pharmaciegarde.common.api.PageResponse;
 import com.buddies.pharmaciegarde.modules.common.dto.ZoneCreateDto;
 import com.buddies.pharmaciegarde.modules.common.dto.ZoneResponseDto;
 import com.buddies.pharmaciegarde.modules.common.dto.ZoneUpdateDto;
@@ -25,10 +30,18 @@ public class ZoneServiceImpl implements ZoneService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@Cacheable(value = "zones", key = "'all'")
 	public List<ZoneResponseDto> getAllZones() {
 		return zoneRepository.findAll().stream()
 				.map(this::mapToResponseDto)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PageResponse<ZoneResponseDto> getPage(int page, int size) {
+		Page<Zone> result = zoneRepository.findAll(PageRequests.of(page, size));
+		return PageResponse.from(result.map(this::mapToResponseDto));
 	}
 
 	@Override
@@ -40,6 +53,7 @@ public class ZoneServiceImpl implements ZoneService {
 	}
 
 	@Override
+	@CacheEvict(value = "zones", allEntries = true)
 	public ZoneResponseDto createZone(ZoneCreateDto createDto) {
 		// Normaliser le nom de la zone (majuscules sans accents)
 		String normalizedName = normalizeZoneName(createDto.getName());
@@ -61,6 +75,7 @@ public class ZoneServiceImpl implements ZoneService {
 	}
 
 	@Override
+	@CacheEvict(value = "zones", allEntries = true)
 	public ZoneResponseDto updateZone(Long id, ZoneUpdateDto updateDto) {
 		Zone zone = zoneRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Zone", id));
@@ -92,6 +107,7 @@ public class ZoneServiceImpl implements ZoneService {
 	}
 
 	@Override
+	@CacheEvict(value = "zones", allEntries = true)
 	public void deleteZone(Long id) {
 		Zone zone = zoneRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Zone", id));
@@ -100,6 +116,7 @@ public class ZoneServiceImpl implements ZoneService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@Cacheable(value = "zones", key = "'active'")
 	public List<ZoneResponseDto> getActiveZones() {
 		return zoneRepository.findByIsActive(true).stream()
 				.map(this::mapToResponseDto)

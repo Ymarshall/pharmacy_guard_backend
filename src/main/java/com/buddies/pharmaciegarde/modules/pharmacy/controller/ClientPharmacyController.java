@@ -56,7 +56,8 @@ public class ClientPharmacyController {
 			@RequestParam Double longitude,
 			@Parameter(description = "Nombre de pharmacies à retourner (par défaut: 3)") 
 			@RequestParam(defaultValue = "3") int limit) {
-		List<PharmacyWithDistanceDto> pharmacies = pharmacyService.getNearestDutyPharmacies(latitude, longitude, limit);
+		int safeLimit = Math.min(Math.max(limit, 1), 50);
+		List<PharmacyWithDistanceDto> pharmacies = pharmacyService.getNearestDutyPharmacies(latitude, longitude, safeLimit);
 		return ResponseEntity.ok(pharmacies);
 	}
 
@@ -75,7 +76,8 @@ public class ClientPharmacyController {
 			@RequestParam Double longitude,
 			@Parameter(description = "Nombre de pharmacies à retourner (par défaut: 3)") 
 			@RequestParam(defaultValue = "3") int limit) {
-		List<PharmacyWithDistanceDto> pharmacies = pharmacyService.getNearestPharmacies(latitude, longitude, limit);
+		int safeLimit = Math.min(Math.max(limit, 1), 50);
+		List<PharmacyWithDistanceDto> pharmacies = pharmacyService.getNearestPharmacies(latitude, longitude, safeLimit);
 		return ResponseEntity.ok(pharmacies);
 	}
 

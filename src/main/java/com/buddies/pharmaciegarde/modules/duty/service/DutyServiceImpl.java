@@ -25,6 +25,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +35,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import com.buddies.pharmaciegarde.common.api.PageRequests;
+import com.buddies.pharmaciegarde.common.api.PageResponse;
 import com.buddies.pharmaciegarde.common.exception.ResourceNotFoundException;
+import com.buddies.pharmaciegarde.config.security.SecurityUtils;
+import com.buddies.pharmaciegarde.modules.duty.matching.MatchStatus;
+import com.buddies.pharmaciegarde.modules.duty.matching.PharmacyCandidate;
+import com.buddies.pharmaciegarde.modules.duty.matching.PharmacyMatch;
+import com.buddies.pharmaciegarde.modules.duty.matching.PharmacyMatcher;
+import com.buddies.pharmaciegarde.modules.duty.matching.PharmacyNameNormalizer;
 import com.buddies.pharmaciegarde.modules.duty.dto.DutyCreateDto;
 import com.buddies.pharmaciegarde.modules.duty.dto.DutyFileResponseDto;
 import com.buddies.pharmaciegarde.modules.duty.dto.DutyReportDto;
@@ -64,12 +75,9 @@ public class DutyServiceImpl implements DutyService {
 	private final DutyPeriodRepository dutyPeriodRepository;
 	private final PharmacyRepository pharmacyRepository;
 	private final ClientRepository clientRepository;
-	private final PDFProcessingService pdfProcessingService; // Ancien service (déprécié)
-	private final DocumentProcessingService documentProcessingService; // Nouveau service
-	private final GoogleVisionService googleVisionService; // Service OCR optionnel
-
-	@Value("${file.upload-dir:uploads/duty-files}")
-	private String uploadDir;
+	private final PharmacyMatcher pharmacyMatcher;
+	private final DutyDocumentExtractor dutyDocumentExtractor;
+	private final UploadStorageService uploadStorageService;
 
 	@Value("${file.extraction-dir:uploads/extractions}")
 	private String extractionDir;
@@ -79,16 +87,17 @@ public class DutyServiceImpl implements DutyService {
 	public DutyServiceImpl(DutyRepository dutyRepository, DutyFileRepository dutyFileRepository,
 			DutyPeriodRepository dutyPeriodRepository, PharmacyRepository pharmacyRepository,
 			ClientRepository clientRepository,
-			PDFProcessingService pdfProcessingService, DocumentProcessingService documentProcessingService, 
-			GoogleVisionService googleVisionService) {
+			PharmacyMatcher pharmacyMatcher,
+			DutyDocumentExtractor dutyDocumentExtractor,
+			UploadStorageService uploadStorageService) {
 		this.dutyRepository = dutyRepository;
 		this.dutyFileRepository = dutyFileRepository;
 		this.dutyPeriodRepository = dutyPeriodRepository;
 		this.pharmacyRepository = pharmacyRepository;
 		this.clientRepository = clientRepository;
-		this.pdfProcessingService = pdfProcessingService;
-		this.documentProcessingService = documentProcessingService;
-		this.googleVisionService = googleVisionService;
+		this.pharmacyMatcher = pharmacyMatcher;
+		this.dutyDocumentExtractor = dutyDocumentExtractor;
+		this.uploadStorageService = uploadStorageService;
 		
 		// Configurer ObjectMapper pour formater le JSON de manière lisible
 		this.objectMapper = new ObjectMapper();
@@ -139,6 +148,20 @@ public class DutyServiceImpl implements DutyService {
 		return dutyRepository.findAll().stream()
 				.map(this::mapToResponseDto)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PageResponse<DutyResponseDto> getPage(int page, int size) {
+		Page<Duty> result = dutyRepository.findAll(PageRequests.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
+		return PageResponse.from(result.map(this::mapToResponseDto));
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PageResponse<DutyFileResponseDto> getFilesPage(int page, int size) {
+		Page<DutyFile> result = dutyFileRepository.findAll(PageRequests.of(page, size, Sort.by(Sort.Direction.DESC, "uploadDate")));
+		return PageResponse.from(result.map(this::mapToFileResponseDto));
 	}
 
 	@Override
@@ -209,53 +232,29 @@ public class DutyServiceImpl implements DutyService {
 
 	@Override
 	public DutyFileResponseDto uploadPdfFile(MultipartFile file, String description, Long dutyPeriodId) {
-		if (file.isEmpty()) {
-			throw new IllegalArgumentException("Le fichier est vide");
-		}
-
-		String contentType = file.getContentType();
-		boolean isPdf = contentType != null && contentType.equals("application/pdf");
-		boolean isJpeg = contentType != null && (contentType.equals("image/jpeg") || contentType.equals("image/jpg"));
-		
-		if (!isPdf && !isJpeg) {
-			throw new IllegalArgumentException("Le fichier doit être un PDF ou une image JPEG. Type reçu: " + contentType);
-		}
-
 		try {
-			// Créer le répertoire s'il n'existe pas
-			Path uploadPath = Paths.get(uploadDir);
-			if (!Files.exists(uploadPath)) {
-				Files.createDirectories(uploadPath);
-			}
-
-			// Générer un nom de fichier unique
-			String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-			Path filePath = uploadPath.resolve(fileName);
-
-			// Sauvegarder le fichier
-			Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-			// Créer l'entrée dans la base de données
+			UploadStorageService.StoredUpload stored = uploadStorageService.store(file, UploadStorageService.UploadKind.DUTY_DOCUMENT);
 			DutyFile dutyFile = new DutyFile();
-			dutyFile.setFileName(file.getOriginalFilename());
-			dutyFile.setFilePath(filePath.toString());
-			dutyFile.setFileSize(file.getSize());
+			dutyFile.setFileName(stored.originalName());
+			dutyFile.setFilePath(stored.path().toString());
+			dutyFile.setFileSize(stored.size());
+			dutyFile.setContentHash(stored.sha256());
 			dutyFile.setStatus(ProcessingStatus.PENDING);
-			// Sauvegarder la description si fournie
 			if (description != null && !description.trim().isEmpty()) {
 				dutyFile.setDescription(description.trim());
 			}
-			// Lier à la période de garde si fournie
 			if (dutyPeriodId != null) {
 				DutyPeriod dutyPeriod = dutyPeriodRepository.findById(dutyPeriodId)
 						.orElseThrow(() -> new ResourceNotFoundException("Période de garde", dutyPeriodId));
 				dutyFile.setDutyPeriod(dutyPeriod);
 			}
-
 			DutyFile savedFile = dutyFileRepository.save(dutyFile);
 			return mapToFileResponseDto(savedFile);
+		} catch (IllegalArgumentException ex) {
+			throw ex;
 		} catch (IOException e) {
-			throw new RuntimeException("Erreur lors de l'upload du fichier: " + e.getMessage(), e);
+			logger.error("Erreur lors de l'upload d'un fichier de garde", e);
+			throw new IllegalArgumentException("Erreur lors de l'upload du fichier");
 		}
 	}
 
@@ -294,6 +293,11 @@ public class DutyServiceImpl implements DutyService {
 
 	@Override
 	public PdfProcessingResultDto processPdfFile(Long dutyFileId) {
+		return processPdfFile(dutyFileId, false);
+	}
+
+	@Override
+	public PdfProcessingResultDto processPdfFile(Long dutyFileId, boolean autoCreateUnknown) {
 		DutyFile dutyFile = dutyFileRepository.findById(dutyFileId)
 				.orElseThrow(() -> new ResourceNotFoundException("Fichier de garde", dutyFileId));
 
@@ -318,45 +322,12 @@ public class DutyServiceImpl implements DutyService {
 
 		try {
 			// Charger le fichier
-			Path filePath = Paths.get(dutyFile.getFilePath());
+			Path filePath = uploadStorageService.resolveInsideRoot(dutyFile.getFilePath());
 			if (!Files.exists(filePath)) {
 				throw new IOException("Le fichier n'existe plus sur le serveur");
 			}
 
-			// Extraire les pharmacies du document (PDF ou image)
-			List<ExtractedPharmacyDto> extractedPharmacies;
-			try (java.io.InputStream inputStream = Files.newInputStream(filePath)) {
-				// Vérifier si OCR est nécessaire
-				boolean needsOCR = documentProcessingService.requiresOCR(inputStream, dutyFile.getFileName());
-				
-				if (needsOCR && googleVisionService != null) {
-					try {
-						// Utiliser Google Vision API pour les images/PDF scannés
-						byte[] fileBytes = Files.readAllBytes(filePath);
-						extractedPharmacies = googleVisionService.extractPharmaciesFromImage(fileBytes);
-					} catch (Exception e) {
-						// Si Google Vision échoue, essayer l'extraction directe si c'est un PDF
-						if (dutyFile.getFileName().toLowerCase().endsWith(".pdf")) {
-							System.err.println("⚠ Google Vision a échoué, tentative d'extraction directe: " + e.getMessage());
-							try (java.io.InputStream inputStream2 = Files.newInputStream(filePath)) {
-								extractedPharmacies = documentProcessingService.extractPharmacies(
-										inputStream2, dutyFile.getFileName());
-							}
-						} else {
-							// Pour les images, on ne peut pas continuer sans OCR
-							throw new IllegalStateException(
-									"L'extraction OCR avec Google Vision a échoué. " +
-									"Vérifiez la configuration des credentials. Erreur: " + e.getMessage(), e);
-						}
-					}
-				} else {
-					// Utiliser l'extraction directe pour les PDF texte
-					try (java.io.InputStream inputStream2 = Files.newInputStream(filePath)) {
-						extractedPharmacies = documentProcessingService.extractPharmacies(
-								inputStream2, dutyFile.getFileName());
-					}
-				}
-			}
+			List<ExtractedPharmacyDto> extractedPharmacies = dutyDocumentExtractor.extract(filePath, dutyFile.getFileName());
 
 			result.setPharmaciesFound(extractedPharmacies.size());
 
@@ -364,32 +335,42 @@ public class DutyServiceImpl implements DutyService {
 			int dutiesCreated = 0;
 			int pharmaciesCreated = 0;
 
-			for (ExtractedPharmacyDto extractedPharmacy : extractedPharmacies) {
-				// Chercher la pharmacie dans la base de données par nom
-				java.util.Optional<Pharmacy> pharmacyOpt = pharmacyRepository.findByName(
-						extractedPharmacy.getPharmacyName());
+			List<PharmacyCandidate> catalog = pharmacyRepository.findAll().stream()
+					.map(pharmacy -> new PharmacyCandidate(pharmacy.getId(), pharmacy.getName(), pharmacy.getCity(),
+							pharmacy.getCommune(), pharmacy.getDistrict(), pharmacy.getPhone1(), pharmacy.getPhone2()))
+					.collect(Collectors.toList());
 
-				Pharmacy pharmacy;
-				if (pharmacyOpt.isPresent()) {
-					// Pharmacie existante
-					pharmacy = pharmacyOpt.get();
-					extractedPharmacy.setPharmacyId(pharmacy.getId());
+			for (ExtractedPharmacyDto extractedPharmacy : extractedPharmacies) {
+				PharmacyMatch match = pharmacyMatcher.match(extractedPharmacy.getPharmacyName(),
+						extractedPharmacy.getZone(), extractedPharmacy.getPhoneNumbers(), catalog);
+				extractedPharmacy.setConfidence(match.confidence());
+				extractedPharmacy.setMatchStatus(match.status().name());
+
+				Pharmacy pharmacy = null;
+				if (match.status() == MatchStatus.MATCHED && match.suggested() != null) {
+					pharmacy = pharmacyRepository.findById(match.suggested().id()).orElse(null);
 					extractedPharmacy.setExistsInDatabase(true);
-				} else {
-					// Créer la pharmacie avec les informations extraites
+				} else if (match.status() == MatchStatus.NOT_FOUND && autoCreateUnknown) {
 					pharmacy = createPharmacyFromExtracted(extractedPharmacy);
+					pharmacy.setName(PharmacyNameNormalizer.displayName(extractedPharmacy.getPharmacyName()));
 					pharmacy = pharmacyRepository.save(pharmacy);
 					pharmaciesCreated++;
-					extractedPharmacy.setPharmacyId(pharmacy.getId());
-					extractedPharmacy.setExistsInDatabase(false); // Nouvellement créée
+					extractedPharmacy.setExistsInDatabase(false);
+					catalog.add(new PharmacyCandidate(pharmacy.getId(), pharmacy.getName(), pharmacy.getCity(),
+							pharmacy.getCommune(), pharmacy.getDistrict(), pharmacy.getPhone1(), pharmacy.getPhone2()));
 				}
 
-				// Vérifier si une garde existe déjà pour cette pharmacie et cette période
+				if (pharmacy == null) {
+					extractedPharmacy.setPharmacyId(null);
+					extractedPharmacy.setExistsInDatabase(false);
+					continue;
+				}
+				extractedPharmacy.setPharmacyId(pharmacy.getId());
+
 				List<Duty> existingDuties = dutyRepository.findByPharmacyIdAndDutyPeriodId(
 						pharmacy.getId(), dutyPeriod.getId());
 
 				if (existingDuties.isEmpty()) {
-					// Créer la garde
 					Duty duty = new Duty();
 					duty.setPharmacy(pharmacy);
 					duty.setDutyPeriod(dutyPeriod);
@@ -457,13 +438,14 @@ public class DutyServiceImpl implements DutyService {
 		// Supprimer le fichier physique s'il existe
 		if (dutyFile.getFilePath() != null) {
 			try {
-				Path filePath = Paths.get(dutyFile.getFilePath());
+				Path filePath = uploadStorageService.resolveInsideRoot(dutyFile.getFilePath());
 				if (Files.exists(filePath)) {
 					Files.delete(filePath);
 				}
 			} catch (IOException e) {
-				// Logger l'erreur mais continuer la suppression de l'entrée en base
-				System.err.println("Erreur lors de la suppression du fichier physique: " + e.getMessage());
+				logger.warn("Erreur lors de la suppression du fichier physique {}", dutyFile.getId());
+			} catch (IllegalArgumentException e) {
+				logger.warn("Suppression physique refusée pour le fichier {}", dutyFile.getId());
 			}
 		}
 
@@ -540,11 +522,9 @@ public class DutyServiceImpl implements DutyService {
 			// Sauvegarder dans le fichier
 			Files.write(txtFilePath, content.toString().getBytes(StandardCharsets.UTF_8));
 
-			System.out.println("✓ Extraction sauvegardée dans: " + txtFilePath.toAbsolutePath());
+			logger.info("Extraction sauvegardée dans {}", txtFilePath.toAbsolutePath());
 		} catch (Exception e) {
-			// Logger l'erreur mais ne pas faire échouer le traitement
-			System.err.println("⚠ Erreur lors de la sauvegarde de l'extraction: " + e.getMessage());
-			e.printStackTrace();
+			logger.warn("Erreur lors de la sauvegarde de l'extraction du fichier {}", dutyFile.getId());
 		}
 	}
 
@@ -558,7 +538,7 @@ public class DutyServiceImpl implements DutyService {
 
 		try {
 			// Charger le fichier
-			Path filePath = Paths.get(dutyFile.getFilePath());
+			Path filePath = uploadStorageService.resolveInsideRoot(dutyFile.getFilePath());
 			if (!Files.exists(filePath)) {
 				throw new IOException("Le fichier n'existe plus sur le serveur");
 			}
@@ -658,6 +638,10 @@ public class DutyServiceImpl implements DutyService {
 		dto.setErrorMessage(dutyFile.getErrorMessage());
 		dto.setPharmaciesCount(dutyFile.getPharmaciesCount());
 		dto.setDescription(dutyFile.getDescription());
+		dto.setContentHash(dutyFile.getContentHash());
+		if (dutyFile.getDutyPeriod() != null) {
+			dto.setDutyPeriodId(dutyFile.getDutyPeriod().getId());
+		}
 		return dto;
 	}
 
@@ -775,15 +759,15 @@ public class DutyServiceImpl implements DutyService {
 		}
 
 		// Vérifier le type de fichier
-		String contentType = file.getContentType();
-		boolean isExcel = contentType != null && (
-			contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") || // .xlsx
-			contentType.equals("application/vnd.ms-excel") // .xls
-		);
-		
-		if (!isExcel) {
-			throw new IllegalArgumentException("Le fichier doit être un fichier Excel (.xlsx ou .xls). Type reçu: " + contentType);
+		try {
+			uploadStorageService.assertAllowed(file, UploadStorageService.UploadKind.EXCEL);
+		} catch (IOException ex) {
+			throw new IllegalArgumentException("Impossible de lire le fichier Excel");
 		}
+		org.apache.poi.openxml4j.util.ZipSecureFile.setMinInflateRatio(0.01d);
+		String originalName = file.getOriginalFilename() == null ? "" : file.getOriginalFilename().toLowerCase();
+		boolean xlsx = originalName.endsWith(".xlsx")
+				|| (file.getContentType() != null && file.getContentType().contains("spreadsheetml"));
 
 		// Vérifier que la période de garde existe
 		DutyPeriod dutyPeriod = dutyPeriodRepository.findById(dutyPeriodId)
@@ -803,7 +787,7 @@ public class DutyServiceImpl implements DutyService {
 		try {
 			// Lire le fichier Excel
 			Workbook workbook;
-			if (contentType != null && contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+			if (xlsx) {
 				workbook = new XSSFWorkbook(file.getInputStream());
 			} else {
 				workbook = new HSSFWorkbook(file.getInputStream());
@@ -814,6 +798,10 @@ public class DutyServiceImpl implements DutyService {
 			// Ignorer la première ligne (en-têtes)
 			int startRow = 1;
 			int lastRowNum = sheet.getLastRowNum();
+			List<PharmacyCandidate> catalog = pharmacyRepository.findAll().stream()
+					.map(pharmacy -> new PharmacyCandidate(pharmacy.getId(), pharmacy.getName(), pharmacy.getCity(),
+							pharmacy.getCommune(), pharmacy.getDistrict(), pharmacy.getPhone1(), pharmacy.getPhone2()))
+					.collect(Collectors.toList());
 
 			for (int i = startRow; i <= lastRowNum; i++) {
 				Row row = sheet.getRow(i);
@@ -850,11 +838,12 @@ public class DutyServiceImpl implements DutyService {
 					String phone2 = phoneNumbers.length > 1 ? cleanPhoneNumber(phoneNumbers[1].trim()) : null;
 
 					// Normaliser le nom de la pharmacie (comme dans PharmacyInitializationService)
-					String normalizedName = normalizePharmacyName(pharmacyName.trim());
-
-					// Chercher une pharmacie existante par nom + commune + ville
-					// Pour l'instant, on utilise seulement le nom car on n'a pas la commune/ville dans l'Excel
-					java.util.Optional<Pharmacy> existingPharmacyOpt = pharmacyRepository.findByName(normalizedName);
+					String normalizedName = PharmacyNameNormalizer.displayName(pharmacyName.trim());
+					PharmacyMatch match = pharmacyMatcher.match(pharmacyName, zone, contacts, catalog);
+					java.util.Optional<Pharmacy> existingPharmacyOpt = match.status() == MatchStatus.MATCHED
+							&& match.suggested() != null
+									? pharmacyRepository.findById(match.suggested().id())
+									: pharmacyRepository.findByName(normalizedName);
 
 					Pharmacy pharmacy;
 					boolean wasCreated;
@@ -1012,15 +1001,12 @@ public class DutyServiceImpl implements DutyService {
 
 	@Override
 	public DutyResponseDto reportDuty(DutyReportDto dutyReportDto) {
-		// Log pour déboguer
-		logger.debug("Signalement de pharmacie - clientId: {}, pharmacyId: {}", 
-				dutyReportDto.getClientId(), dutyReportDto.getPharmacyId());
-		
-		// Vérifier que le client existe (même approche que pour les commentaires)
 		Long clientId = dutyReportDto.getClientId();
 		if (clientId == null) {
 			throw new IllegalArgumentException("L'ID du client est obligatoire");
 		}
+		SecurityUtils.assertClientSelfOrBackoffice(clientId);
+		logger.debug("Signalement de pharmacie - pharmacyId: {}", dutyReportDto.getPharmacyId());
 		
 		Client client = clientRepository.findById(clientId)
 				.orElseThrow(() -> {

@@ -7,9 +7,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.buddies.pharmaciegarde.common.api.PageRequests;
+import com.buddies.pharmaciegarde.common.api.PageResponse;
 import com.buddies.pharmaciegarde.common.exception.ResourceNotFoundException;
 import com.buddies.pharmaciegarde.common.utils.DistanceCalculator;
 import com.buddies.pharmaciegarde.modules.pharmacy.dto.AssuranceResponseDto;
@@ -106,6 +111,23 @@ public class PharmacyServiceImpl implements PharmacyService {
 		return pharmacyRepository.findAll().stream()
 				.map(this::mapToResponseDto)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public PageResponse<PharmacyResponseDto> getPage(int page, int size, String city, String commune, String statut) {
+		Pageable pageable = PageRequests.of(page, size, Sort.by("name"));
+		Page<Pharmacy> result;
+		if (city != null) {
+			result = pharmacyRepository.findByCity(city, pageable);
+		} else if (commune != null) {
+			result = pharmacyRepository.findByCommune(commune, pageable);
+		} else if (statut != null) {
+			result = pharmacyRepository.findByStatut(PharmacyStatus.valueOf(statut.toUpperCase()), pageable);
+		} else {
+			result = pharmacyRepository.findAll(pageable);
+		}
+		return PageResponse.from(result.map(this::mapToResponseDto));
 	}
 
 	@Override

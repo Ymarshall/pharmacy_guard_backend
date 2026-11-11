@@ -71,7 +71,12 @@ public class DutyController {
 			@ApiResponse(responseCode = "200", description = "Liste des gardes récupérée avec succès")
 	})
 	@GetMapping
-	public ResponseEntity<List<DutyResponseDto>> getAll() {
+	public ResponseEntity<?> getAll(
+			@Parameter(description = "Index de page. Absent = liste complète historique.") @RequestParam(required = false) Integer page,
+			@Parameter(description = "Taille de page, max 100") @RequestParam(required = false) Integer size) {
+		if (page != null || size != null) {
+			return ResponseEntity.ok(dutyService.getPage(page == null ? 0 : page, size == null ? 20 : size));
+		}
 		return ResponseEntity.ok(dutyService.getAll());
 	}
 
