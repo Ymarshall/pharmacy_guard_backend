@@ -16,7 +16,13 @@ public interface PharmacyService {
 
 	List<PharmacyResponseDto> getAll();
 
-	PageResponse<PharmacyResponseDto> getPage(int page, int size, String city, String commune, String statut);
+	PageResponse<PharmacyResponseDto> getPage(int page, int size, String city, String commune, String statut,
+			String search, String sort);
+
+	List<PharmacyResponseDto> list(String city, String commune, String statut, String search, String sort);
+
+	PageResponse<com.buddies.pharmaciegarde.modules.pharmacy.dto.PharmacySearchHit> searchForReview(String q,
+			String city, int page, int limit);
 
 	PharmacyResponseDto update(Long id, PharmacyCreateDto pharmacyCreateDto);
 

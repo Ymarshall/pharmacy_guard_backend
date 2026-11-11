@@ -93,7 +93,7 @@ public class PharmacyMatcher {
 		return 0.0;
 	}
 
-	static double jaroWinkler(String left, String right) {
+	public static double jaroWinkler(String left, String right) {
 		if (left == null || right == null) {
 			return 0;
 		}

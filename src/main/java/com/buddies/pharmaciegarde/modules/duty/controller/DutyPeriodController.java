@@ -35,9 +35,14 @@ public class DutyPeriodController {
 	@GetMapping
 	public ResponseEntity<?> getAllPeriods(
 			@RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer size) {
+			@RequestParam(required = false) Integer size,
+			@Parameter(description = "Recherche sur la description et les dates") @RequestParam(required = false) String search,
+			@Parameter(description = "Tri : id, startDate, endDate, isCurrent") @RequestParam(required = false) String sort) {
 		if (page != null || size != null) {
-			return ResponseEntity.ok(dutyPeriodService.getPage(page == null ? 0 : page, size == null ? 20 : size));
+			return ResponseEntity.ok(dutyPeriodService.getPage(page == null ? 0 : page, size == null ? 20 : size, search, sort));
+		}
+		if ((search != null && !search.isBlank()) || (sort != null && !sort.isBlank())) {
+			return ResponseEntity.ok(dutyPeriodService.list(search, sort));
 		}
 		return ResponseEntity.ok(dutyPeriodService.getAllPeriods());
 	}

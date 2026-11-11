@@ -77,9 +77,14 @@ public class ClientController {
 	@GetMapping
 	public ResponseEntity<?> getAll(
 			@RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer size) {
+			@RequestParam(required = false) Integer size,
+			@Parameter(description = "Recherche téléphone, email, prénom, nom") @RequestParam(required = false) String search,
+			@Parameter(description = "Tri : id, phone, firstName, lastName, email") @RequestParam(required = false) String sort) {
 		if (page != null || size != null) {
-			return ResponseEntity.ok(clientService.getPage(page == null ? 0 : page, size == null ? 20 : size));
+			return ResponseEntity.ok(clientService.getPage(page == null ? 0 : page, size == null ? 20 : size, search, sort));
+		}
+		if ((search != null && !search.isBlank()) || (sort != null && !sort.isBlank())) {
+			return ResponseEntity.ok(clientService.list(search, sort));
 		}
 		return ResponseEntity.ok(clientService.getAll());
 	}

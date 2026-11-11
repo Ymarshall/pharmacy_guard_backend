@@ -16,7 +16,9 @@ public interface UserService {
 
 	List<UserResponseDto> getAll();
 
-	PageResponse<UserResponseDto> getPage(int page, int size);
+	PageResponse<UserResponseDto> getPage(int page, int size, String search, String sort);
+
+	List<UserResponseDto> list(String search, String sort);
 
 	UserResponseDto update(Long id, UserCreateDto userCreateDto);
 

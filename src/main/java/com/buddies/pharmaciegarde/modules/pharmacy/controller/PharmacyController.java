@@ -76,9 +76,18 @@ public class PharmacyController {
 			@Parameter(description = "Index de page (à partir de 0). Avec size, la réponse devient un objet paginé.")
 			@RequestParam(required = false) Integer page,
 			@Parameter(description = "Taille de page (max 100). Sans page ni size, la liste complète historique est renvoyée.")
-			@RequestParam(required = false) Integer size) {
+			@RequestParam(required = false) Integer size,
+			@Parameter(description = "Recherche texte insensible à la casse et aux accents (nom, ville, commune, téléphone)")
+			@RequestParam(required = false) String search,
+			@Parameter(description = "Tri liste blanche : id, name, city, commune, statut. Format champ,asc ou champ,desc")
+			@RequestParam(required = false) String sort) {
+		boolean query = (search != null && !search.isBlank()) || (sort != null && !sort.isBlank());
 		if (page != null || size != null) {
-			return ResponseEntity.ok(pharmacyService.getPage(page == null ? 0 : page, size == null ? 20 : size, city, commune, statut));
+			return ResponseEntity.ok(pharmacyService.getPage(page == null ? 0 : page, size == null ? 20 : size, city,
+					commune, statut, search, sort));
+		}
+		if (query) {
+			return ResponseEntity.ok(pharmacyService.list(city, commune, statut, search, sort));
 		}
 		if (city != null) {
 			return ResponseEntity.ok(pharmacyService.getByCity(city));
@@ -90,6 +99,19 @@ public class PharmacyController {
 			return ResponseEntity.ok(pharmacyService.getByStatut(statut));
 		}
 		return ResponseEntity.ok(pharmacyService.getAll());
+	}
+
+	@Operation(summary = "Rechercher des pharmacies pour la révision d'une affiche",
+			description = "Réservé ADMIN/OPERATOR. q est normalisé (PHARMACIE, PHCIE, NVLLE, accents). "
+					+ "Réponse paginée { content: [{ id, name, city, commune, district, phone, score }], page, size, totalElements, totalPages }. "
+					+ "limit borne la taille de page (défaut 20, max 50). page démarre à 0.")
+	@GetMapping("/search")
+	public ResponseEntity<com.buddies.pharmaciegarde.common.api.PageResponse<com.buddies.pharmaciegarde.modules.pharmacy.dto.PharmacySearchHit>> searchForReview(
+			@RequestParam(required = false) String q,
+			@RequestParam(required = false) String city,
+			@RequestParam(required = false, defaultValue = "0") int page,
+			@RequestParam(required = false, defaultValue = "20") int limit) {
+		return ResponseEntity.ok(pharmacyService.searchForReview(q, city, page, limit));
 	}
 
 	@Operation(summary = "Mettre à jour une pharmacie", description = "Met à jour les informations d'une pharmacie existante")

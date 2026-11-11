@@ -72,9 +72,14 @@ public class UserController {
 	@GetMapping
 	public ResponseEntity<?> getAll(
 			@RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer size) {
+			@RequestParam(required = false) Integer size,
+			@Parameter(description = "Recherche email, prénom, nom, rôle") @RequestParam(required = false) String search,
+			@Parameter(description = "Tri : id, email, firstName, lastName, role") @RequestParam(required = false) String sort) {
 		if (page != null || size != null) {
-			return ResponseEntity.ok(userService.getPage(page == null ? 0 : page, size == null ? 20 : size));
+			return ResponseEntity.ok(userService.getPage(page == null ? 0 : page, size == null ? 20 : size, search, sort));
+		}
+		if ((search != null && !search.isBlank()) || (sort != null && !sort.isBlank())) {
+			return ResponseEntity.ok(userService.list(search, sort));
 		}
 		return ResponseEntity.ok(userService.getAll());
 	}

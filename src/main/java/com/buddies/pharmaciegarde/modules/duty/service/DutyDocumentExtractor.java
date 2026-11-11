@@ -1,5 +1,6 @@
 package com.buddies.pharmaciegarde.modules.duty.service;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 
+import com.buddies.pharmaciegarde.common.exception.OcrUnavailableException;
+import com.buddies.pharmaciegarde.common.exception.UnreadableDocumentException;
 import com.buddies.pharmaciegarde.modules.duty.dto.ExtractedPharmacyDto;
 
 /**
@@ -32,8 +35,16 @@ public class DutyDocumentExtractor {
 		this.llmVisionExtractor = llmVisionExtractor;
 	}
 
-	public List<ExtractedPharmacyDto> extract(Path filePath, String fileName) throws Exception {
-		byte[] fileBytes = Files.readAllBytes(filePath);
+	public List<ExtractedPharmacyDto> extract(Path filePath, String fileName) {
+		byte[] fileBytes;
+		try {
+			fileBytes = Files.readAllBytes(filePath);
+		} catch (IOException ex) {
+			throw new UnreadableDocumentException("Fichier illisible");
+		}
+		if (fileBytes.length == 0) {
+			throw new UnreadableDocumentException("Fichier illisible");
+		}
 		try (java.io.InputStream inputStream = Files.newInputStream(filePath)) {
 			boolean needsOcr = documentProcessingService.requiresOCR(inputStream, fileName);
 			if (!needsOcr) {
@@ -41,6 +52,11 @@ public class DutyDocumentExtractor {
 					return documentProcessingService.extractPharmacies(textStream, fileName);
 				}
 			}
+		} catch (UnreadableDocumentException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			logger.warn("Lecture impossible du fichier {}", fileName);
+			throw new UnreadableDocumentException("Fichier illisible");
 		}
 		LlmVisionExtractor llm = llmVisionExtractor.getIfAvailable();
 		if (llm != null && llm.isEnabled()) {
@@ -54,9 +70,16 @@ public class DutyDocumentExtractor {
 				logger.warn("LLM vision indisponible, repli sur Google Vision : {}", ex.getMessage());
 			}
 		}
-		if (googleVisionService == null) {
-			throw new IllegalStateException("Aucun moteur OCR n'est configuré pour ce fichier");
+		if (googleVisionService == null || !googleVisionService.isEnabled()) {
+			throw new OcrUnavailableException("Google Vision API n'est pas activé");
 		}
-		return googleVisionService.extractPharmaciesFromImage(fileBytes);
+		try {
+			return googleVisionService.extractPharmaciesFromImage(fileBytes);
+		} catch (IllegalStateException ex) {
+			throw new OcrUnavailableException("Moteur OCR indisponible");
+		} catch (Exception ex) {
+			logger.warn("OCR impossible pour {}", fileName);
+			throw new UnreadableDocumentException("Fichier illisible");
+		}
 	}
 }

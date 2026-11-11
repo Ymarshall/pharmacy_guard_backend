@@ -73,9 +73,44 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public PageResponse<UserResponseDto> getPage(int page, int size) {
-		Page<User> result = userRepository.findAll(PageRequests.of(page, size, Sort.by("email")));
-		return PageResponse.from(result.map(this::mapToResponseDto));
+	public PageResponse<UserResponseDto> getPage(int page, int size, String search, String sort) {
+		org.springframework.data.domain.Sort parsed = com.buddies.pharmaciegarde.common.api.Sorts.parseOr(sort,
+				java.util.Set.of("id", "email", "firstName", "lastName", "role"),
+				org.springframework.data.domain.Sort.by("email"));
+		if (search == null || search.isBlank()) {
+			return PageResponse.from(userRepository.findAll(PageRequests.of(page, size, parsed)).map(this::mapToResponseDto));
+		}
+		return PageResponse.from(com.buddies.pharmaciegarde.common.api.Slices.of(filterUsers(search, parsed), page, size)
+				.map(this::mapToResponseDto));
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<UserResponseDto> list(String search, String sort) {
+		org.springframework.data.domain.Sort parsed = com.buddies.pharmaciegarde.common.api.Sorts.parseOr(sort,
+				java.util.Set.of("id", "email", "firstName", "lastName", "role"),
+				org.springframework.data.domain.Sort.by("email"));
+		return filterUsers(search, parsed).stream().map(this::mapToResponseDto).collect(Collectors.toList());
+	}
+
+	private List<User> filterUsers(String search, org.springframework.data.domain.Sort parsed) {
+		String field = com.buddies.pharmaciegarde.common.api.Sorts.field(parsed, "email");
+		boolean desc = com.buddies.pharmaciegarde.common.api.Sorts.isDescending(parsed);
+		java.util.Comparator<User> comparator = switch (field) {
+			case "id" -> java.util.Comparator.comparing(User::getId);
+			case "firstName" -> java.util.Comparator.comparing(User::getFirstName, java.util.Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+			case "lastName" -> java.util.Comparator.comparing(User::getLastName, java.util.Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+			case "role" -> java.util.Comparator.comparing(user -> user.getRole() == null ? "" : user.getRole().name());
+			default -> java.util.Comparator.comparing(User::getEmail, java.util.Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+		};
+		if (desc) {
+			comparator = comparator.reversed();
+		}
+		return userRepository.findAll().stream()
+				.filter(user -> com.buddies.pharmaciegarde.common.api.TextSearch.containsAny(search, user.getEmail(),
+						user.getFirstName(), user.getLastName(), user.getRole() == null ? null : user.getRole().name()))
+				.sorted(comparator)
+				.collect(Collectors.toList());
 	}
 
 	@Override

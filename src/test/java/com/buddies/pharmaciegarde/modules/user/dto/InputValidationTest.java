@@ -32,7 +32,8 @@ class InputValidationTest {
 
 	@Test
 	void rejectsConfirmLineWithoutName() {
-		DutyImportLineDecision line = new DutyImportLineDecision("  ", "ABIDJAN", null, null, null, null, false, false);
+		DutyImportLineDecision line = new DutyImportLineDecision("  ", "ABIDJAN", null, null, null, null, null, null,
+				null, null, null, false, false);
 		assertFalse(validator.validate(line).isEmpty());
 	}
 }

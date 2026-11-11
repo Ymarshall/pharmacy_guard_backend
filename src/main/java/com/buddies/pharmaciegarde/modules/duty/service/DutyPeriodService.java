@@ -10,7 +10,10 @@ public interface DutyPeriodService {
 
 	List<DutyPeriodResponseDto> getAllPeriods();
 
-	com.buddies.pharmaciegarde.common.api.PageResponse<DutyPeriodResponseDto> getPage(int page, int size);
+	com.buddies.pharmaciegarde.common.api.PageResponse<DutyPeriodResponseDto> getPage(int page, int size, String search,
+			String sort);
+
+	List<DutyPeriodResponseDto> list(String search, String sort);
 
 	DutyPeriodResponseDto getPeriodById(Long id);
 

@@ -80,8 +80,7 @@ public class Pharmacy {
 	@Column(nullable = false)
 	private PharmacyStatus statut;
 
-	@NotBlank(message = "La localisation est obligatoire")
-	@Column(name = "location", nullable = false)
+	@Column(name = "location")
 	private String location;
 
 	@BatchSize(size = 50)

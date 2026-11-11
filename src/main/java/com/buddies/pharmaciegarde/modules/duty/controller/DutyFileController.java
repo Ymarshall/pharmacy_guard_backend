@@ -175,6 +175,15 @@ public class DutyFileController {
 		return ResponseEntity.ok(dutyImportService.preview(id));
 	}
 
+	@Operation(summary = "Prévisualiser une affiche en arrière-plan",
+			description = "Répond 202 { jobId, status: PENDING, jobType: PREVIEW }. "
+					+ "GET /api/duty-files/jobs/{jobId} renvoie ensuite status COMPLETED et le champ preview "
+					+ "(DutyImportPreviewResponse), ou FAILED avec le message (Vision absente, fichier illisible).")
+	@PostMapping("/{id}/preview-async")
+	public ResponseEntity<DutyJobResponse> previewAsync(@PathVariable Long id) {
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(dutyProcessingJobService.enqueuePreview(id));
+	}
+
 	@Operation(summary = "Valider les lignes corrigées et créer les gardes",
 			description = "Crée les gardes en masse. Les doublons de la même période sont ignorés (idempotent). "
 					+ "Les lignes skip=true sont ignorées. createPharmacy=true crée une pharmacie absente du référentiel.")

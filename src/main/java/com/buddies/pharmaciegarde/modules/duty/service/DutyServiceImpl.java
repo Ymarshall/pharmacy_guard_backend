@@ -152,9 +152,45 @@ public class DutyServiceImpl implements DutyService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public PageResponse<DutyResponseDto> getPage(int page, int size) {
-		Page<Duty> result = dutyRepository.findAll(PageRequests.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
-		return PageResponse.from(result.map(this::mapToResponseDto));
+	public PageResponse<DutyResponseDto> getPage(int page, int size, String search, String sort) {
+		if (search == null || search.isBlank()) {
+			org.springframework.data.domain.Sort parsed = com.buddies.pharmaciegarde.common.api.Sorts.parseOr(sort,
+					java.util.Set.of("id", "status", "createdAt"),
+					org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "id"));
+			Page<Duty> result = dutyRepository.findAll(PageRequests.of(page, size, parsed));
+			return PageResponse.from(result.map(this::mapToResponseDto));
+		}
+		return PageResponse.from(com.buddies.pharmaciegarde.common.api.Slices
+				.of(filterDuties(search, sort), page, size).map(this::mapToResponseDto));
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<DutyResponseDto> list(String search, String sort) {
+		return filterDuties(search, sort).stream().map(this::mapToResponseDto).collect(Collectors.toList());
+	}
+
+	private List<Duty> filterDuties(String search, String sort) {
+		org.springframework.data.domain.Sort parsed = com.buddies.pharmaciegarde.common.api.Sorts.parseOr(sort,
+				java.util.Set.of("id", "status", "createdAt"),
+				org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "id"));
+		String field = com.buddies.pharmaciegarde.common.api.Sorts.field(parsed, "id");
+		boolean desc = com.buddies.pharmaciegarde.common.api.Sorts.isDescending(parsed);
+		java.util.Comparator<Duty> comparator = switch (field) {
+			case "status" -> java.util.Comparator.comparing(duty -> duty.getStatus() == null ? "" : duty.getStatus().name());
+			case "createdAt" -> java.util.Comparator.comparing(Duty::getCreatedAt, java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder()));
+			default -> java.util.Comparator.comparing(Duty::getId, java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder()));
+		};
+		if (desc) {
+			comparator = comparator.reversed();
+		}
+		return dutyRepository.findAll().stream()
+				.filter(duty -> com.buddies.pharmaciegarde.common.api.TextSearch.containsAny(search,
+						duty.getPharmacy() == null ? null : duty.getPharmacy().getName(),
+						duty.getPharmacy() == null ? null : duty.getPharmacy().getCity(),
+						duty.getStatus() == null ? null : duty.getStatus().name()))
+				.sorted(comparator)
+				.collect(Collectors.toList());
 	}
 
 	@Override

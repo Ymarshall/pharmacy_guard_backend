@@ -111,6 +111,7 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.GET, "/api/emergency-numbers", "/api/emergency-numbers/**").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/zones", "/api/zones/**").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/assurances", "/api/assurances/**").permitAll()
+					.requestMatchers(HttpMethod.GET, "/api/pharmacies/search").hasAnyRole("ADMIN", "OPERATOR")
 					.requestMatchers(HttpMethod.GET, "/api/pharmacies", "/api/pharmacies/**").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/duty-periods/current", "/api/duty-periods/current/all").permitAll()
 					.requestMatchers(HttpMethod.GET,

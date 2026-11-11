@@ -39,6 +39,18 @@ public class GlobalExceptionHandler {
 				ApiError.of(400, "BAD_REQUEST", "Requête invalide", ex.getMessage(), request.getRequestURI()));
 	}
 
+	@ExceptionHandler(OcrUnavailableException.class)
+	public ResponseEntity<ApiError> handleOcrUnavailable(OcrUnavailableException ex, HttpServletRequest request) {
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(ApiError.of(503, "SERVICE_UNAVAILABLE",
+				"Moteur OCR indisponible", ex.getMessage(), request.getRequestURI()));
+	}
+
+	@ExceptionHandler(UnreadableDocumentException.class)
+	public ResponseEntity<ApiError> handleUnreadableDocument(UnreadableDocumentException ex, HttpServletRequest request) {
+		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ApiError.of(422, "UNPROCESSABLE_ENTITY",
+				"Fichier illisible", ex.getMessage(), request.getRequestURI()));
+	}
+
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<ApiError> handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(

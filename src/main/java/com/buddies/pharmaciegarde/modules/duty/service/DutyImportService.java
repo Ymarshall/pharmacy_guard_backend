@@ -5,14 +5,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.buddies.pharmaciegarde.common.exception.OcrUnavailableException;
 import com.buddies.pharmaciegarde.common.exception.ResourceNotFoundException;
+import com.buddies.pharmaciegarde.common.exception.UnreadableDocumentException;
 import com.buddies.pharmaciegarde.modules.duty.dto.DutyImportConfirmLineResult;
 import com.buddies.pharmaciegarde.modules.duty.dto.DutyImportConfirmRequest;
 import com.buddies.pharmaciegarde.modules.duty.dto.DutyImportConfirmResponse;
@@ -104,11 +105,13 @@ public class DutyImportService {
 					dutyFileId, lines.size(), matched, ambiguous, notFound);
 			return new DutyImportPreviewResponse(dutyFileId, period.getId(), hash, already, lines.size(), matched,
 					ambiguous, notFound, duplicates, lines);
+		} catch (OcrUnavailableException | UnreadableDocumentException ex) {
+			throw ex;
 		} catch (RuntimeException ex) {
 			throw ex;
 		} catch (Exception ex) {
 			logger.error("Échec de la prévisualisation du fichier {}", dutyFileId, ex);
-			throw new IllegalArgumentException("Impossible d'extraire le fichier. Vérifiez le format et la configuration OCR.");
+			throw new UnreadableDocumentException("Fichier illisible");
 		}
 	}
 
@@ -166,33 +169,70 @@ public class DutyImportService {
 			return pharmacyRepository.findById(line.pharmacyId())
 					.orElseThrow(() -> new ResourceNotFoundException("Pharmacie", line.pharmacyId()));
 		}
-		String displayName = PharmacyNameNormalizer.displayName(line.pharmacyName());
+		String displayName = line.pharmacyName().trim().toUpperCase(Locale.ROOT).replaceAll("\\s+", " ");
 		return pharmacyRepository.findByName(displayName).orElseGet(() -> {
 			if (!line.createPharmacy()) {
 				throw new IllegalArgumentException(
 						"Aucune pharmacie sélectionnée pour « " + line.pharmacyName() + " ». Choisissez une alternative ou créez-la.");
 			}
+			String phone = realPhone(line);
+			if (pharmacyRepository.existsByPhone1(phone)) {
+				throw new IllegalArgumentException("Une pharmacie utilise déjà le téléphone " + phone);
+			}
+			String city = upperPlace(firstText(line.city(), line.zone()));
+			String commune = upperPlace(firstText(line.commune(), line.zone()));
 			Pharmacy created = new Pharmacy();
 			created.setName(trim(displayName, 255));
 			created.setPharmacistName(blankToNull(line.pharmacistName()));
-			created.setPhone1(uniquePhone(line.phoneNumbers()));
-			created.setDescription(blankToNull(line.location()));
-			String zone = line.zone() == null || line.zone().isBlank() ? "INCONNUE" : line.zone().trim().toUpperCase(Locale.ROOT);
-			created.setCity(trim(zone, 100));
-			created.setCommune(trim(zone, 100));
+			created.setPhone1(phone);
+			created.setDescription(blankToNull(firstText(line.description(), line.location())));
+			created.setCity(trim(city, 100));
+			created.setCommune(trim(commune, 100));
 			created.setStatut(Pharmacy.PharmacyStatus.ACTIF);
-			created.setLocation("0,0");
+			created.setLocation(blankToNull(line.coordinates()));
 			return created;
 		});
 	}
 
-	private String uniquePhone(String phones) {
-		String key = PharmacyNameNormalizer.phoneKey(phones);
-		String phone = key.length() >= 8 ? key : "NC" + ThreadLocalRandom.current().nextInt(10000000, 99999999);
-		if (pharmacyRepository.existsByPhone1(phone)) {
-			return "NC" + ThreadLocalRandom.current().nextInt(10000000, 99999999);
+	private String realPhone(DutyImportLineDecision line) {
+		String raw = firstText(line.phone(), firstToken(line.phoneNumbers()));
+		if (raw == null) {
+			throw new IllegalArgumentException("Un numéro de téléphone réel est obligatoire");
 		}
-		return phone;
+		String trimmed = raw.trim();
+		if (trimmed.length() <= 20 && PharmacyNameNormalizer.phoneKey(trimmed).length() >= 8) {
+			return trimmed;
+		}
+		String digits = PharmacyNameNormalizer.phoneKey(trimmed);
+		if (digits.length() < 8) {
+			throw new IllegalArgumentException("Un numéro de téléphone réel est obligatoire");
+		}
+		return digits.length() > 20 ? digits.substring(0, 20) : digits;
+	}
+
+	private String firstToken(String phones) {
+		if (phones == null || phones.isBlank()) {
+			return null;
+		}
+		String[] parts = phones.split("[/,;]");
+		return parts.length == 0 ? phones : parts[0];
+	}
+
+	private String firstText(String preferred, String fallback) {
+		if (preferred != null && !preferred.isBlank()) {
+			return preferred.trim();
+		}
+		if (fallback != null && !fallback.isBlank()) {
+			return fallback.trim();
+		}
+		return null;
+	}
+
+	private String upperPlace(String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("La ville et la commune sont obligatoires");
+		}
+		return value.toUpperCase(Locale.ROOT);
 	}
 
 	private List<PharmacyCandidate> catalog() {
@@ -219,6 +259,10 @@ public class DutyImportService {
 	private DutyFile loadFile(Long id) {
 		return dutyFileRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Fichier de garde", id));
+	}
+
+	public void requireExisting(Long dutyFileId) {
+		loadFile(dutyFileId);
 	}
 
 	private DutyPeriod requirePeriod(DutyFile dutyFile) {
