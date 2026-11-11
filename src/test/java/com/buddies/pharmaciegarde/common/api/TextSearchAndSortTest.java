@@ -12,9 +12,11 @@ import org.springframework.data.domain.Sort;
 class TextSearchAndSortTest {
 
 	@Test
-	void foldsAccentsAndCase() {
+	void foldsAccentsApostrophesAndCase() {
 		assertTrue(TextSearch.contains("Port-Bouët", "bouet"));
-		assertTrue(TextSearch.contains("PHCIE Atlantique", "atlantique"));
+		assertTrue(TextSearch.contains("Pharmacie de l'Étoile", "pharmacie de l'etoile"));
+		assertTrue(TextSearch.contains("Côte d’Ivoire", "cote d'ivoire"));
+		assertTrue(TextSearch.contains("ABOBO", "abobo"));
 		assertEquals("marche", TextSearch.fold("Marché"));
 	}
 

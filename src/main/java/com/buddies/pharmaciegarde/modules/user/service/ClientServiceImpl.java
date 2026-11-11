@@ -217,7 +217,11 @@ public class ClientServiceImpl implements ClientService {
 	private ClientResponseDto mapToResponseDto(Client client) {
 		ClientResponseDto dto = new ClientResponseDto();
 		dto.setId(client.getId());
+		dto.setEmail(client.getEmail());
 		dto.setPhone(client.getPhone());
+		dto.setFirstName(client.getFirstName());
+		dto.setLastName(client.getLastName());
+		dto.setProviderType(client.getProviderType());
 		dto.setLatitude(client.getLatitude());
 		dto.setLongitude(client.getLongitude());
 		dto.setIsActive(client.getIsActive());

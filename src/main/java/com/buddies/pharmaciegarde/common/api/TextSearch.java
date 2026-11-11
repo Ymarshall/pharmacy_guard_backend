@@ -18,7 +18,12 @@ public final class TextSearch {
 		if (value == null) {
 			return "";
 		}
-		String decomposed = Normalizer.normalize(value.trim().toLowerCase(Locale.ROOT), Normalizer.Form.NFD);
+		String cleaned = value.trim()
+				.replace('’', '\'')
+				.replace('‘', '\'')
+				.replace('´', '\'')
+				.replace('`', '\'');
+		String decomposed = Normalizer.normalize(cleaned.toLowerCase(Locale.ROOT), Normalizer.Form.NFD);
 		return MARKS.matcher(decomposed).replaceAll("").replaceAll("\\s+", " ");
 	}
 

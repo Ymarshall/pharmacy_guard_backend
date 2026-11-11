@@ -180,9 +180,16 @@ public class PharmacyServiceImpl implements PharmacyService {
 		org.springframework.data.domain.Sort parsed = Sorts.parse(sort,
 				java.util.Set.of("id", "name", "city", "commune", "statut"), "name");
 		if (search != null && !search.isBlank()) {
-			List<Pharmacy> trigram = pharmacyTrigramSearch.search(search, city, commune, statut, parsed);
-			if (trigram != null) {
-				return trigram;
+			try {
+				List<Long> ids = pharmacyTrigramSearch.searchIds(search, city, commune, statut, parsed);
+				if (ids != null) {
+					java.util.Map<Long, Pharmacy> byId = pharmacyRepository.findAllById(ids).stream()
+							.collect(Collectors.toMap(Pharmacy::getId, pharmacy -> pharmacy));
+					return ids.stream().map(byId::get).filter(java.util.Objects::nonNull).collect(Collectors.toList());
+				}
+			} catch (RuntimeException ex) {
+				org.slf4j.LoggerFactory.getLogger(PharmacyServiceImpl.class)
+						.warn("Recherche trigram indisponible, repli Java : {}", ex.getMessage());
 			}
 		}
 		PharmacyStatus status = statut == null || statut.isBlank() ? null : PharmacyStatus.valueOf(statut.toUpperCase());

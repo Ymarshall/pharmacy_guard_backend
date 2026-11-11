@@ -5,20 +5,22 @@ import java.util.Map;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
 
 /**
- * Recherche PostgreSQL sur l'index trigram (extension pg_trgm + unaccent immutable).
- * Retourne null si la base n'est pas PostgreSQL ou si la fonction n'est pas installée :
- * l'appelant retombe alors sur une comparaison Java insensible aux accents.
+ * Recherche PostgreSQL sur l'index trigram (pg_trgm + unaccent).
+ * L'entrée utilisateur reste un paramètre. Le ORDER BY vient d'une liste blanche.
+ * Ne pas passer le SQL à String.format / formatted : les % du LIKE seraient lus comme des spécificateurs
+ * (UnknownFormatConversionException « Conversion = ' »), et le repli Java ne serait jamais atteint.
  */
 @Component
 public class PharmacyTrigramSearch {
 
-	private static final Map<String, String> COLUMNS = Map.of(
+	static final Map<String, String> COLUMNS = Map.of(
 			"id", "p.id",
 			"name", "p.name",
 			"city", "p.city",
@@ -37,37 +39,38 @@ public class PharmacyTrigramSearch {
 		return value.toLowerCase().contains("postgres");
 	}
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
 	@SuppressWarnings("unchecked")
-	public List<com.buddies.pharmaciegarde.modules.pharmacy.model.Pharmacy> search(String search, String city,
-			String commune, String statut, Sort sort) {
+	public List<Long> searchIds(String search, String city, String commune, String statut, Sort sort) {
 		if (!supportsTrigram() || search == null || search.isBlank()) {
 			return null;
 		}
-		String order = orderBy(sort);
-		String sql = """
+		String sql = buildSql(orderBy(sort)).replace("SELECT p.*", "SELECT p.id");
+		Query query = entityManager.createNativeQuery(sql);
+		query.setParameter("search", search.trim());
+		query.setParameter("city", blank(city));
+		query.setParameter("commune", blank(commune));
+		query.setParameter("statut", blank(statut));
+		List<Number> ids = query.getResultList();
+		return ids.stream().map(Number::longValue).toList();
+	}
+
+	/**
+	 * SQL paramétré. {@code orderBy} est déjà une colonne de {@link #COLUMNS}, jamais la saisie utilisateur.
+	 */
+	static String buildSql(String orderBy) {
+		return """
 				SELECT p.* FROM pharmacies p
 				WHERE (
-				  immutable_unaccent(lower(p.name)) LIKE '%' || immutable_unaccent(lower(CAST(:search AS varchar))) || '%'
-				  OR similarity(immutable_unaccent(lower(p.name)), immutable_unaccent(lower(CAST(:search AS varchar)))) > 0.2
-				  OR immutable_unaccent(lower(coalesce(p.city, ''))) LIKE '%' || immutable_unaccent(lower(CAST(:search AS varchar))) || '%'
-				  OR immutable_unaccent(lower(coalesce(p.commune, ''))) LIKE '%' || immutable_unaccent(lower(CAST(:search AS varchar))) || '%'
+				  immutable_unaccent(lower(p.name)) LIKE concat('%', immutable_unaccent(lower(cast(:search as varchar))), '%')
+				  OR similarity(immutable_unaccent(lower(p.name)), immutable_unaccent(lower(cast(:search as varchar)))) > 0.45
+				  OR immutable_unaccent(lower(coalesce(p.city, ''))) LIKE concat('%', immutable_unaccent(lower(cast(:search as varchar))), '%')
+				  OR immutable_unaccent(lower(coalesce(p.commune, ''))) LIKE concat('%', immutable_unaccent(lower(cast(:search as varchar))), '%')
 				)
-				AND (CAST(:city AS varchar) IS NULL OR lower(p.city) = lower(CAST(:city AS varchar)))
-				AND (CAST(:commune AS varchar) IS NULL OR lower(p.commune) = lower(CAST(:commune AS varchar)))
-				AND (CAST(:statut AS varchar) IS NULL OR p.statut = CAST(:statut AS varchar))
-				ORDER BY %s
-				""".formatted(order);
-		try {
-			Query query = entityManager.createNativeQuery(sql,
-					com.buddies.pharmaciegarde.modules.pharmacy.model.Pharmacy.class);
-			query.setParameter("search", search.trim());
-			query.setParameter("city", blankToNull(city));
-			query.setParameter("commune", blankToNull(commune));
-			query.setParameter("statut", blankToNull(statut));
-			return query.getResultList();
-		} catch (PersistenceException ex) {
-			return null;
-		}
+				AND (:city = '' OR lower(p.city) = lower(cast(:city as varchar)))
+				AND (:commune = '' OR lower(p.commune) = lower(cast(:commune as varchar)))
+				AND (:statut = '' OR p.statut = cast(:statut as varchar))
+				""" + " ORDER BY " + orderBy;
 	}
 
 	private String orderBy(Sort sort) {
@@ -81,7 +84,7 @@ public class PharmacyTrigramSearch {
 		return COLUMNS.get(order.getProperty()) + (order.isDescending() ? " DESC" : " ASC");
 	}
 
-	private String blankToNull(String value) {
-		return value == null || value.isBlank() ? null : value.trim();
+	private String blank(String value) {
+		return value == null ? "" : value.trim();
 	}
 }
