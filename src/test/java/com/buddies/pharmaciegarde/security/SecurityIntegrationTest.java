@@ -107,7 +107,10 @@ class SecurityIntegrationTest {
 				.with(remote)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{\"email\":\"admin@test.ci\",\"password\":\"mauvais\"}"))
-				.andExpect(status().is(429));
+				.andExpect(status().is(429))
+				.andExpect(header().string("Content-Type", "application/json;charset=UTF-8"))
+				.andExpect(jsonPath("$.message").value(
+						"Trop de tentatives de connexion. Réessayez dans une minute."));
 	}
 
 	@Test

@@ -88,25 +88,18 @@ public class SecurityConfig {
 					.addHeaderWriter((request, response) -> response.setHeader(
 							"Permissions-Policy", "geolocation=(), camera=(), microphone=()")))
 			.exceptionHandling(ex -> ex
-					.authenticationEntryPoint((request, response, authException) -> {
-						response.setStatus(401);
-						response.setContentType("application/json");
-						response.getWriter().write(
-								"{\"status\":\"UNAUTHORIZED\",\"statusCode\":401,\"message\":\"Authentification requise\"}");
-					})
-					.accessDeniedHandler((request, response, accessDeniedException) -> {
-						response.setStatus(403);
-						response.setContentType("application/json");
-						response.getWriter().write(
-								"{\"status\":\"FORBIDDEN\",\"statusCode\":403,\"message\":\"Accès refusé\"}");
-					}))
+					.authenticationEntryPoint((request, response, authException) -> SecurityJson.write(response, 401,
+							"{\"status\":\"UNAUTHORIZED\",\"statusCode\":401,\"message\":\"Authentification requise\"}"))
+					.accessDeniedHandler((request, response, accessDeniedException) -> SecurityJson.write(response, 403,
+							"{\"status\":\"FORBIDDEN\",\"statusCode\":403,\"message\":\"Accès refusé\"}")))
 			.authorizeHttpRequests(auth -> {
 				if (swaggerEnabled) {
 					auth.requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll();
 				} else {
 					auth.requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").denyAll();
 				}
-				auth.requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/client/login").permitAll()
+				auth.requestMatchers(HttpMethod.POST,
+						"/api/auth/login", "/api/auth/client/login", "/api/auth/client/register").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/emergency-numbers", "/api/emergency-numbers/**").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/zones", "/api/zones/**").permitAll()

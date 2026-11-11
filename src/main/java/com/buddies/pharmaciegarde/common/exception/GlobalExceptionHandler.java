@@ -25,6 +25,12 @@ public class GlobalExceptionHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+	@ExceptionHandler(ConflictException.class)
+	public ResponseEntity<ApiError> handleConflict(ConflictException ex, HttpServletRequest request) {
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(
+				ApiError.of(409, "CONFLICT", "Conflit", ex.getMessage(), request.getRequestURI()));
+	}
+
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ApiError> handleResourceNotFoundException(ResourceNotFoundException ex,
 			HttpServletRequest request) {

@@ -1,22 +1,24 @@
 package com.buddies.pharmaciegarde.modules.user.service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.buddies.pharmaciegarde.common.api.PageRequests;
-import com.buddies.pharmaciegarde.common.api.PageResponse;
+import com.buddies.pharmaciegarde.common.exception.ConflictException;
 import com.buddies.pharmaciegarde.common.exception.ResourceNotFoundException;
+import com.buddies.pharmaciegarde.common.validation.IvorianPhoneValidator;
 import com.buddies.pharmaciegarde.config.security.AuthPrincipal;
 import com.buddies.pharmaciegarde.config.security.JwtService;
 import com.buddies.pharmaciegarde.config.security.SecurityUtils;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientCreateDto;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientLoginDto;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientLoginResponseDto;
+import com.buddies.pharmaciegarde.modules.user.dto.ClientRegisterDto;
 import com.buddies.pharmaciegarde.modules.user.dto.ClientResponseDto;
 import com.buddies.pharmaciegarde.modules.user.dto.LocationUpdateDto;
 import com.buddies.pharmaciegarde.modules.user.model.Client;
@@ -67,6 +69,29 @@ public class ClientServiceImpl implements ClientService {
 
 		Client savedClient = clientRepository.save(client);
 		return mapToResponseDto(savedClient);
+	}
+
+	@Override
+	public ClientLoginResponseDto register(ClientRegisterDto clientRegisterDto) {
+		String phone = clientRegisterDto.getPhone().trim();
+		String national = IvorianPhoneValidator.nationalNumber(phone);
+		if (national == null) {
+			throw new IllegalArgumentException("Le numéro de téléphone doit être un numéro ivoirien valide");
+		}
+		if (findByNationalNumber(national).isPresent()) {
+			throw new ConflictException("Un client avec ce numéro de téléphone existe déjà");
+		}
+
+		Client client = new Client();
+		client.setPhone(phone);
+		client.setProviderType(ProviderType.PHONE);
+		client.setIsActive(true);
+		try {
+			Client savedClient = clientRepository.saveAndFlush(client);
+			return loginResponse(savedClient);
+		} catch (DataIntegrityViolationException ex) {
+			throw new ConflictException("Un client avec ce numéro de téléphone existe déjà");
+		}
 	}
 
 	@Override
@@ -171,8 +196,11 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	@Transactional(readOnly = true)
 	public ClientLoginResponseDto login(ClientLoginDto clientLoginDto) {
-		// Chercher le client par téléphone
-		Client client = clientRepository.findByPhone(clientLoginDto.getPhone())
+		String raw = clientLoginDto.getPhone();
+		String trimmed = raw.trim();
+		Client client = clientRepository.findByPhone(raw)
+				.or(() -> raw.equals(trimmed) ? Optional.empty() : clientRepository.findByPhone(trimmed))
+				.or(() -> findByNationalNumber(IvorianPhoneValidator.nationalNumber(trimmed)))
 				.orElseThrow(() -> new IllegalArgumentException("Numéro de téléphone non trouvé"));
 
 		// Vérifier si le client est actif
@@ -180,7 +208,10 @@ public class ClientServiceImpl implements ClientService {
 			throw new IllegalArgumentException("Votre compte a été désactivé. Veuillez contacter l'administration.");
 		}
 
-		// Créer la réponse avec uniquement les informations du client
+		return loginResponse(client);
+	}
+
+	private ClientLoginResponseDto loginResponse(Client client) {
 		ClientLoginResponseDto response = new ClientLoginResponseDto();
 		response.setClient(mapToResponseDto(client));
 		response.setToken(jwtService.generate(new AuthPrincipal(client.getId(), client.getPhone(),
@@ -188,6 +219,15 @@ public class ClientServiceImpl implements ClientService {
 		response.setTokenType("Bearer");
 		response.setExpiresInSeconds(jwtService.getExpirationSeconds());
 		return response;
+	}
+
+	private Optional<Client> findByNationalNumber(String national) {
+		if (national == null) {
+			return Optional.empty();
+		}
+		return clientRepository.findAll().stream()
+				.filter(client -> national.equals(IvorianPhoneValidator.nationalNumber(client.getPhone())))
+				.min(Comparator.comparing(Client::getId));
 	}
 
 	@Override
