@@ -73,6 +73,7 @@ public class DutyServiceImpl implements DutyService {
 	private final DutyRepository dutyRepository;
 	private final DutyFileRepository dutyFileRepository;
 	private final DutyPeriodRepository dutyPeriodRepository;
+	private final ActiveDutyPeriodResolver activeDutyPeriodResolver;
 	private final PharmacyRepository pharmacyRepository;
 	private final ClientRepository clientRepository;
 	private final PharmacyMatcher pharmacyMatcher;
@@ -89,7 +90,8 @@ public class DutyServiceImpl implements DutyService {
 			ClientRepository clientRepository,
 			PharmacyMatcher pharmacyMatcher,
 			DutyDocumentExtractor dutyDocumentExtractor,
-			UploadStorageService uploadStorageService) {
+			UploadStorageService uploadStorageService,
+			ActiveDutyPeriodResolver activeDutyPeriodResolver) {
 		this.dutyRepository = dutyRepository;
 		this.dutyFileRepository = dutyFileRepository;
 		this.dutyPeriodRepository = dutyPeriodRepository;
@@ -98,6 +100,7 @@ public class DutyServiceImpl implements DutyService {
 		this.pharmacyMatcher = pharmacyMatcher;
 		this.dutyDocumentExtractor = dutyDocumentExtractor;
 		this.uploadStorageService = uploadStorageService;
+		this.activeDutyPeriodResolver = activeDutyPeriodResolver;
 		
 		// Configurer ObjectMapper pour formater le JSON de manière lisible
 		this.objectMapper = new ObjectMapper();
@@ -1054,8 +1057,8 @@ public class DutyServiceImpl implements DutyService {
 		Pharmacy pharmacy = pharmacyRepository.findById(dutyReportDto.getPharmacyId())
 				.orElseThrow(() -> new ResourceNotFoundException("Pharmacie", dutyReportDto.getPharmacyId()));
 
-		// Récupérer la période de garde active
-		java.util.Optional<DutyPeriod> activePeriodOpt = dutyPeriodRepository.findByIsCurrentTrue();
+		// Récupérer la période de garde réellement en cours (isCurrent + fenêtre de relève)
+		java.util.Optional<DutyPeriod> activePeriodOpt = activeDutyPeriodResolver.findActive();
 		if (activePeriodOpt.isEmpty()) {
 			throw new IllegalArgumentException(
 					"Impossible de signaler : aucune période de garde active n'est actuellement en cours. " +

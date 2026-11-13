@@ -5,6 +5,7 @@ import com.buddies.pharmaciegarde.modules.pharmacy.model.Pharmacy.PharmacyStatus
 import com.buddies.pharmaciegarde.modules.pharmacy.repository.PharmacyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -27,13 +28,21 @@ public class PharmacyInitializationService implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(PharmacyInitializationService.class);
 
     private final PharmacyRepository pharmacyRepository;
+    private final boolean seedEnabled;
 
-    public PharmacyInitializationService(PharmacyRepository pharmacyRepository) {
+    public PharmacyInitializationService(PharmacyRepository pharmacyRepository,
+            @Value("${app.seed.pharmacies.enabled:false}") boolean seedEnabled) {
         this.pharmacyRepository = pharmacyRepository;
+        this.seedEnabled = seedEnabled;
     }
 
     @Override
     public void run(String... args) {
+        if (!seedEnabled) {
+            logger.info("Initialisation des pharmacies désactivée (app.seed.pharmacies.enabled=false)");
+            return;
+        }
+
         logger.info("Début de l'initialisation des pharmacies...");
 
         List<PharmacyData> pharmaciesData = getPharmaciesData();
