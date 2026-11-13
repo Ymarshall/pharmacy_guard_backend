@@ -133,6 +133,15 @@ class FrontFollowUpTest {
 
 	@Test
 	void pagedSearchIsAccentInsensitiveAndSortIsWhitelisted() throws Exception {
+		// Le seed embarqué est désactivé : on crée la pharmacie que la recherche doit trouver.
+		com.buddies.pharmaciegarde.modules.pharmacy.model.Pharmacy portBouet = new com.buddies.pharmaciegarde.modules.pharmacy.model.Pharmacy();
+		portBouet.setName("PHCIE TEST PORT BOUET");
+		portBouet.setPhone1("0700111555");
+		portBouet.setCity("ABIDJAN");
+		portBouet.setCommune("PORT-BOUET");
+		portBouet.setStatut(com.buddies.pharmaciegarde.modules.pharmacy.model.Pharmacy.PharmacyStatus.ACTIF);
+		pharmacyRepository.save(portBouet);
+
 		String token = login();
 		mockMvc.perform(get("/api/pharmacies").param("page", "0").param("size", "50").param("search", "bouet"))
 				.andExpect(status().isOk())

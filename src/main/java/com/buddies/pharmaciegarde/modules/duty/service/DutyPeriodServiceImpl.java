@@ -21,9 +21,12 @@ import com.buddies.pharmaciegarde.modules.duty.repository.DutyPeriodRepository;
 public class DutyPeriodServiceImpl implements DutyPeriodService {
 
 	private final DutyPeriodRepository dutyPeriodRepository;
+	private final ActiveDutyPeriodResolver activeDutyPeriodResolver;
 
-	public DutyPeriodServiceImpl(DutyPeriodRepository dutyPeriodRepository) {
+	public DutyPeriodServiceImpl(DutyPeriodRepository dutyPeriodRepository,
+			ActiveDutyPeriodResolver activeDutyPeriodResolver) {
 		this.dutyPeriodRepository = dutyPeriodRepository;
+		this.activeDutyPeriodResolver = activeDutyPeriodResolver;
 	}
 
 	@Override
@@ -168,15 +171,15 @@ public class DutyPeriodServiceImpl implements DutyPeriodService {
 	@Override
 	@Transactional(readOnly = true)
 	public DutyPeriodResponseDto getCurrentPeriod() {
-		DutyPeriod period = dutyPeriodRepository.findByIsCurrentTrue()
-				.orElseThrow(() -> new ResourceNotFoundException("Aucune garde courante trouvée", null));
+		DutyPeriod period = activeDutyPeriodResolver.findActive()
+				.orElseThrow(() -> new ResourceNotFoundException("Aucune garde courante trouvée"));
 		return mapToResponseDto(period);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<DutyPeriodResponseDto> getCurrentPeriods() {
-		return dutyPeriodRepository.findByIsCurrentTrueOrderByStartDateDesc().stream()
+		return activeDutyPeriodResolver.findActiveAll().stream()
 				.map(this::mapToResponseDto)
 				.collect(Collectors.toList());
 	}

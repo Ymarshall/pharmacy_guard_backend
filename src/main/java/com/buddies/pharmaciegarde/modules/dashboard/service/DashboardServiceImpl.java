@@ -1,9 +1,7 @@
 package com.buddies.pharmaciegarde.modules.dashboard.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +29,8 @@ import com.buddies.pharmaciegarde.modules.duty.model.DutyPeriod;
 import com.buddies.pharmaciegarde.modules.duty.repository.DutyFileRepository;
 import com.buddies.pharmaciegarde.modules.duty.repository.DutyPeriodRepository;
 import com.buddies.pharmaciegarde.modules.duty.repository.DutyRepository;
+import com.buddies.pharmaciegarde.modules.duty.service.ActiveDutyPeriodResolver;
+import com.buddies.pharmaciegarde.modules.duty.service.DutyPeriodWindow;
 import com.buddies.pharmaciegarde.modules.pharmacy.model.Pharmacy;
 import com.buddies.pharmaciegarde.modules.pharmacy.model.Pharmacy.PharmacyStatus;
 import com.buddies.pharmaciegarde.modules.pharmacy.repository.PharmacyRepository;
@@ -48,6 +48,8 @@ public class DashboardServiceImpl implements DashboardService {
 	private final ClientRepository clientRepository;
 	private final UserRepository userRepository;
 	private final ZoneRepository zoneRepository;
+	private final ActiveDutyPeriodResolver activeDutyPeriodResolver;
+	private final DutyPeriodWindow dutyPeriodWindow;
 
 	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
@@ -59,7 +61,9 @@ public class DashboardServiceImpl implements DashboardService {
 			DutyFileRepository dutyFileRepository,
 			ClientRepository clientRepository,
 			UserRepository userRepository,
-			ZoneRepository zoneRepository) {
+			ZoneRepository zoneRepository,
+			ActiveDutyPeriodResolver activeDutyPeriodResolver,
+			DutyPeriodWindow dutyPeriodWindow) {
 		this.pharmacyRepository = pharmacyRepository;
 		this.dutyPeriodRepository = dutyPeriodRepository;
 		this.dutyRepository = dutyRepository;
@@ -67,6 +71,8 @@ public class DashboardServiceImpl implements DashboardService {
 		this.clientRepository = clientRepository;
 		this.userRepository = userRepository;
 		this.zoneRepository = zoneRepository;
+		this.activeDutyPeriodResolver = activeDutyPeriodResolver;
+		this.dutyPeriodWindow = dutyPeriodWindow;
 	}
 
 	@Override
@@ -108,7 +114,7 @@ public class DashboardServiceImpl implements DashboardService {
 	private CurrentDutyPeriodInfo buildCurrentPeriodInfo() {
 		CurrentDutyPeriodInfo currentPeriod = new CurrentDutyPeriodInfo();
 
-		Optional<DutyPeriod> activePeriodOpt = dutyPeriodRepository.findByIsCurrentTrue();
+		Optional<DutyPeriod> activePeriodOpt = activeDutyPeriodResolver.findActive();
 		if (activePeriodOpt.isPresent()) {
 			DutyPeriod activePeriod = activePeriodOpt.get();
 			currentPeriod.setPeriodId(activePeriod.getId());
@@ -138,15 +144,8 @@ public class DashboardServiceImpl implements DashboardService {
 					.count();
 			currentPeriod.setFilesProcessed((int) filesProcessed);
 
-			// Calculer les jours restants
-			LocalDate today = LocalDate.now();
-			LocalDate endDate = activePeriod.getEndDate();
-			if (endDate.isAfter(today)) {
-				long daysRemaining = ChronoUnit.DAYS.between(today, endDate);
-				currentPeriod.setDaysRemaining((int) daysRemaining);
-			} else {
-				currentPeriod.setDaysRemaining(0);
-			}
+			// Jours restants inclusifs, calculés sur la fenêtre de relève
+			currentPeriod.setDaysRemaining(dutyPeriodWindow.daysRemaining(activePeriod));
 		} else {
 			// Pas de période active
 			currentPeriod.setPeriodId(null);
@@ -330,8 +329,8 @@ public class DashboardServiceImpl implements DashboardService {
 			}
 		}
 
-		// Vérifier s'il y a une période active
-		Optional<DutyPeriod> activePeriodOpt = dutyPeriodRepository.findByIsCurrentTrue();
+		// Vérifier s'il y a une période réellement en cours
+		Optional<DutyPeriod> activePeriodOpt = activeDutyPeriodResolver.findActive();
 		if (activePeriodOpt.isEmpty()) {
 			AlertDto alert = new AlertDto();
 			alert.setType("NO_ACTIVE_PERIOD");
@@ -342,17 +341,16 @@ public class DashboardServiceImpl implements DashboardService {
 			alert.setCreatedAt(LocalDateTime.now().format(DATETIME_FORMATTER));
 			alerts.add(alert);
 		} else {
-			// Vérifier si la période active expire dans moins de 3 jours
+			// Vérifier si la période active expire dans 3 jours ou moins (décompte inclusif)
 			DutyPeriod activePeriod = activePeriodOpt.get();
-			LocalDate today = LocalDate.now();
-			LocalDate endDate = activePeriod.getEndDate();
-			long daysUntilEnd = ChronoUnit.DAYS.between(today, endDate);
-			if (daysUntilEnd <= 3 && daysUntilEnd >= 0) {
+			int daysUntilEnd = dutyPeriodWindow.daysRemaining(activePeriod);
+			if (daysUntilEnd <= 3 && daysUntilEnd > 0) {
 				AlertDto alert = new AlertDto();
 				alert.setType("PERIOD_EXPIRING");
 				alert.setTitle("Période de garde expire bientôt");
 				alert.setMessage("La période de garde active expire dans " + daysUntilEnd
-						+ " jour(s) (le " + endDate.format(DATE_FORMATTER) + "). Pensez à préparer la prochaine période.");
+						+ " jour(s) (le " + activePeriod.getEndDate().format(DATE_FORMATTER)
+						+ "). Pensez à préparer la prochaine période.");
 				alert.setPriority("MEDIUM");
 				alert.setEntityId(activePeriod.getId());
 				alert.setCreatedAt(LocalDateTime.now().format(DATETIME_FORMATTER));

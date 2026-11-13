@@ -36,7 +36,7 @@ import com.buddies.pharmaciegarde.modules.duty.model.Duty;
 import com.buddies.pharmaciegarde.modules.duty.model.DutyPeriod;
 import com.buddies.pharmaciegarde.modules.duty.model.DutyStatus;
 import com.buddies.pharmaciegarde.modules.duty.repository.DutyRepository;
-import com.buddies.pharmaciegarde.modules.duty.repository.DutyPeriodRepository;
+import com.buddies.pharmaciegarde.modules.duty.service.ActiveDutyPeriodResolver;
 
 @Service
 @Transactional
@@ -45,17 +45,17 @@ public class PharmacyServiceImpl implements PharmacyService {
 	private final PharmacyRepository pharmacyRepository;
 	private final AssuranceRepository assuranceRepository;
 	private final DutyRepository dutyRepository;
-	private final DutyPeriodRepository dutyPeriodRepository;
+	private final ActiveDutyPeriodResolver activeDutyPeriodResolver;
 	private final PharmacyReviewRepository pharmacyReviewRepository;
 	private final PharmacyTrigramSearch pharmacyTrigramSearch;
 
 	public PharmacyServiceImpl(PharmacyRepository pharmacyRepository, AssuranceRepository assuranceRepository,
-			DutyRepository dutyRepository, DutyPeriodRepository dutyPeriodRepository,
+			DutyRepository dutyRepository, ActiveDutyPeriodResolver activeDutyPeriodResolver,
 			PharmacyReviewRepository pharmacyReviewRepository, PharmacyTrigramSearch pharmacyTrigramSearch) {
 		this.pharmacyRepository = pharmacyRepository;
 		this.assuranceRepository = assuranceRepository;
 		this.dutyRepository = dutyRepository;
-		this.dutyPeriodRepository = dutyPeriodRepository;
+		this.activeDutyPeriodResolver = activeDutyPeriodResolver;
 		this.pharmacyReviewRepository = pharmacyReviewRepository;
 		this.pharmacyTrigramSearch = pharmacyTrigramSearch;
 	}
@@ -415,8 +415,8 @@ public class PharmacyServiceImpl implements PharmacyService {
 			throw new IllegalArgumentException("La longitude doit être entre -180 et 180");
 		}
 
-		// Récupérer la période de garde active
-		java.util.Optional<DutyPeriod> activePeriodOpt = dutyPeriodRepository.findByIsCurrentTrue();
+		// Récupérer la période de garde réellement en cours (isCurrent + fenêtre de relève)
+		java.util.Optional<DutyPeriod> activePeriodOpt = activeDutyPeriodResolver.findActive();
 
 		if (activePeriodOpt.isEmpty()) {
 			// Si aucune période active, retourner une liste vide
@@ -558,8 +558,8 @@ public class PharmacyServiceImpl implements PharmacyService {
 	 * @return true si la pharmacie est de garde pour la période active avec statut ACTIVE ou TO_VERIFY, false sinon
 	 */
 	private Boolean isPharmacyOnDuty(Long pharmacyId) {
-		// Récupérer la période de garde active
-		java.util.Optional<DutyPeriod> activePeriodOpt = dutyPeriodRepository.findByIsCurrentTrue();
+		// Récupérer la période de garde réellement en cours (isCurrent + fenêtre de relève)
+		java.util.Optional<DutyPeriod> activePeriodOpt = activeDutyPeriodResolver.findActive();
 		
 		if (activePeriodOpt.isEmpty()) {
 			return false;
