@@ -113,9 +113,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<PharmacyResponseDto> getAll() {
-		return pharmacyRepository.findAll().stream()
-				.map(this::mapToResponseDto)
-				.collect(Collectors.toList());
+		return mapAllToResponseDto(pharmacyRepository.findAll());
 	}
 
 	@Override
@@ -136,18 +134,18 @@ public class PharmacyServiceImpl implements PharmacyService {
 			} else {
 				result = pharmacyRepository.findAll(pageable);
 			}
-			return PageResponse.from(result.map(this::mapToResponseDto));
+			EnrichmentContext context = buildContext(result.getContent());
+			return PageResponse.from(result.map(pharmacy -> mapToResponseDto(pharmacy, context)));
 		}
-		return PageResponse.from(Slices.of(selectPharmacies(city, commune, statut, search, sort), page, size)
-				.map(this::mapToResponseDto));
+		Page<Pharmacy> slice = Slices.of(selectPharmacies(city, commune, statut, search, sort), page, size);
+		EnrichmentContext context = buildContext(slice.getContent());
+		return PageResponse.from(slice.map(pharmacy -> mapToResponseDto(pharmacy, context)));
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<PharmacyResponseDto> list(String city, String commune, String statut, String search, String sort) {
-		return selectPharmacies(city, commune, statut, search, sort).stream()
-				.map(this::mapToResponseDto)
-				.collect(Collectors.toList());
+		return mapAllToResponseDto(selectPharmacies(city, commune, statut, search, sort));
 	}
 
 	@Override
@@ -273,17 +271,13 @@ public class PharmacyServiceImpl implements PharmacyService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<PharmacyResponseDto> getByCity(String city) {
-		return pharmacyRepository.findByCity(city).stream()
-				.map(this::mapToResponseDto)
-				.collect(Collectors.toList());
+		return mapAllToResponseDto(pharmacyRepository.findByCity(city));
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<PharmacyResponseDto> getByCommune(String commune) {
-		return pharmacyRepository.findByCommune(commune).stream()
-				.map(this::mapToResponseDto)
-				.collect(Collectors.toList());
+		return mapAllToResponseDto(pharmacyRepository.findByCommune(commune));
 	}
 
 	@Override
@@ -291,15 +285,26 @@ public class PharmacyServiceImpl implements PharmacyService {
 	public List<PharmacyResponseDto> getByStatut(String statut) {
 		try {
 			PharmacyStatus status = PharmacyStatus.valueOf(statut.toUpperCase());
-			return pharmacyRepository.findByStatut(status).stream()
-					.map(this::mapToResponseDto)
-					.collect(Collectors.toList());
+			return mapAllToResponseDto(pharmacyRepository.findByStatut(status));
 		} catch (IllegalArgumentException e) {
 			throw new IllegalArgumentException("Statut invalide. Les valeurs acceptées sont: ACTIF, INACTIF");
 		}
 	}
 
 	private PharmacyResponseDto mapToResponseDto(Pharmacy pharmacy) {
+		return mapToResponseDto(pharmacy, buildContext(List.of(pharmacy)));
+	}
+
+	private List<PharmacyResponseDto> mapAllToResponseDto(List<Pharmacy> pharmacies) {
+		EnrichmentContext context = buildContext(pharmacies);
+		List<PharmacyResponseDto> result = new ArrayList<>(pharmacies.size());
+		for (Pharmacy pharmacy : pharmacies) {
+			result.add(mapToResponseDto(pharmacy, context));
+		}
+		return result;
+	}
+
+	private PharmacyResponseDto mapToResponseDto(Pharmacy pharmacy, EnrichmentContext context) {
 		PharmacyResponseDto dto = new PharmacyResponseDto();
 		dto.setId(pharmacy.getId());
 		dto.setName(pharmacy.getName());
@@ -333,11 +338,8 @@ public class PharmacyServiceImpl implements PharmacyService {
 			dto.setAssurances(assurances);
 		}
 		
-		// Enrichir avec les notes et commentaires
-		enrichPharmacyWithRatings(dto, pharmacy.getId());
-		
-		// Vérifier si la pharmacie est de garde pour la période active
-		dto.setIsOnDuty(isPharmacyOnDuty(pharmacy.getId()));
+		// Notes, derniers avis et garde : lus dans le contexte préchargé
+		context.apply(dto, pharmacy.getId());
 		
 		return dto;
 	}
@@ -373,7 +375,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 		List<Pharmacy> activePharmacies = pharmacyRepository.findByStatut(PharmacyStatus.ACTIF);
 
 		// Calculer la distance pour chaque pharmacie et filtrer celles avec localisation
-		List<PharmacyWithDistanceDto> pharmaciesWithDistance = new ArrayList<>();
+		List<RankedPharmacy> candidates = new ArrayList<>();
 
 		for (Pharmacy pharmacy : activePharmacies) {
 			if (pharmacy.getLocation() != null && !pharmacy.getLocation().trim().isEmpty()) {
@@ -382,21 +384,14 @@ public class PharmacyServiceImpl implements PharmacyService {
 					double distance = DistanceCalculator.calculateDistance(
 							clientLat, clientLon, location[0], location[1]);
 
-					PharmacyWithDistanceDto dto = mapToPharmacyWithDistanceDto(pharmacy);
-					// Ajouter les coordonnées GPS de la pharmacie
-					dto.setLatitude(location[0]);
-					dto.setLongitude(location[1]);
-					dto.setDistanceInKm(Math.round(distance * 100.0) / 100.0); // Arrondir à 2 décimales
-					pharmaciesWithDistance.add(dto);
+					candidates.add(new RankedPharmacy(pharmacy, location[0], location[1],
+							Math.round(distance * 100.0) / 100.0)); // Arrondir à 2 décimales
 				}
 			}
 		}
 
-		// Trier par distance et prendre les N plus proches
-		return pharmaciesWithDistance.stream()
-				.sorted(Comparator.comparing(PharmacyWithDistanceDto::getDistanceInKm))
-				.limit(limit)
-				.collect(Collectors.toList());
+		// Trier par distance, garder les N plus proches, puis seulement enrichir ceux-là
+		return toDistanceDtos(candidates, limit);
 	}
 
 	@Override
@@ -437,7 +432,7 @@ public class PharmacyServiceImpl implements PharmacyService {
 				.collect(Collectors.toList());
 
 		// Calculer la distance pour chaque pharmacie et filtrer celles avec localisation
-		List<PharmacyWithDistanceDto> pharmaciesWithDistance = new ArrayList<>();
+		List<RankedPharmacy> candidates = new ArrayList<>();
 
 		for (Pharmacy pharmacy : dutyPharmacies) {
 			if (pharmacy.getLocation() != null && !pharmacy.getLocation().trim().isEmpty()) {
@@ -446,21 +441,14 @@ public class PharmacyServiceImpl implements PharmacyService {
 					double distance = DistanceCalculator.calculateDistance(
 							latitude, longitude, location[0], location[1]);
 
-					PharmacyWithDistanceDto dto = mapToPharmacyWithDistanceDto(pharmacy);
-					// Ajouter les coordonnées GPS de la pharmacie
-					dto.setLatitude(location[0]);
-					dto.setLongitude(location[1]);
-					dto.setDistanceInKm(Math.round(distance * 100.0) / 100.0); // Arrondir à 2 décimales
-					pharmaciesWithDistance.add(dto);
+					candidates.add(new RankedPharmacy(pharmacy, location[0], location[1],
+							Math.round(distance * 100.0) / 100.0)); // Arrondir à 2 décimales
 				}
 			}
 		}
 
-		// Trier par distance et prendre les N plus proches
-		return pharmaciesWithDistance.stream()
-				.sorted(Comparator.comparing(PharmacyWithDistanceDto::getDistanceInKm))
-				.limit(limit)
-				.collect(Collectors.toList());
+		// Trier par distance, garder les N plus proches, puis seulement enrichir ceux-là
+		return toDistanceDtos(candidates, limit);
 	}
 
 	@Override
@@ -503,12 +491,31 @@ public class PharmacyServiceImpl implements PharmacyService {
 					.collect(Collectors.toList());
 		}
 
-		return pharmacies.stream()
-				.map(this::mapToResponseDto)
-				.collect(Collectors.toList());
+		return mapAllToResponseDto(pharmacies);
 	}
 
-	private PharmacyWithDistanceDto mapToPharmacyWithDistanceDto(Pharmacy pharmacy) {
+	private List<PharmacyWithDistanceDto> toDistanceDtos(List<RankedPharmacy> candidates, int limit) {
+		List<RankedPharmacy> nearest = candidates.stream()
+				.sorted(Comparator.comparingDouble(RankedPharmacy::distanceInKm))
+				.limit(limit)
+				.collect(Collectors.toList());
+		EnrichmentContext context = buildContext(nearest.stream().map(RankedPharmacy::pharmacy).toList());
+		List<PharmacyWithDistanceDto> result = new ArrayList<>(nearest.size());
+		for (RankedPharmacy ranked : nearest) {
+			PharmacyWithDistanceDto dto = mapToPharmacyWithDistanceDto(ranked.pharmacy(), context);
+			// Ajouter les coordonnées GPS de la pharmacie
+			dto.setLatitude(ranked.latitude());
+			dto.setLongitude(ranked.longitude());
+			dto.setDistanceInKm(ranked.distanceInKm());
+			result.add(dto);
+		}
+		return result;
+	}
+
+	private record RankedPharmacy(Pharmacy pharmacy, double latitude, double longitude, double distanceInKm) {
+	}
+
+	private PharmacyWithDistanceDto mapToPharmacyWithDistanceDto(Pharmacy pharmacy, EnrichmentContext context) {
 		PharmacyWithDistanceDto dto = new PharmacyWithDistanceDto();
 		dto.setId(pharmacy.getId());
 		dto.setName(pharmacy.getName());
@@ -542,68 +549,84 @@ public class PharmacyServiceImpl implements PharmacyService {
 			dto.setAssurances(assurances);
 		}
 
-		// Enrichir avec les notes et commentaires
-		enrichPharmacyWithRatings(dto, pharmacy.getId());
-
-		// Vérifier si la pharmacie est de garde pour la période active
-		dto.setIsOnDuty(isPharmacyOnDuty(pharmacy.getId()));
+		// Notes, derniers avis et garde : lus dans le contexte préchargé
+		context.apply(dto, pharmacy.getId());
 
 		return dto;
 	}
 
+	/** Au-delà, on agrège tous les avis plutôt que d'envoyer une longue liste d'identifiants. */
+	private static final int IN_CLAUSE_LIMIT = 500;
+
+	private static final List<DutyStatus> ON_DUTY_STATUSES = List.of(DutyStatus.ACTIVE, DutyStatus.TO_VERIFY);
+
 	/**
-	 * Vérifie si une pharmacie est de garde pour la période active
-	 * 
-	 * @param pharmacyId ID de la pharmacie
-	 * @return true si la pharmacie est de garde pour la période active avec statut ACTIVE ou TO_VERIFY, false sinon
+	 * Données d'enrichissement chargées en quelques requêtes pour toute une liste,
+	 * au lieu de 3 à 5 requêtes par pharmacie (N+1).
 	 */
-	private Boolean isPharmacyOnDuty(Long pharmacyId) {
-		// Récupérer la période de garde réellement en cours (isCurrent + fenêtre de relève)
-		java.util.Optional<DutyPeriod> activePeriodOpt = activeDutyPeriodResolver.findActive();
-		
-		if (activePeriodOpt.isEmpty()) {
-			return false;
+	private record EnrichmentContext(Set<Long> onDutyIds, java.util.Map<Long, Object[]> ratings,
+			java.util.Map<Long, List<PharmacyReviewResponseDto>> recentReviews) {
+
+		void apply(PharmacyResponseDto dto, Long pharmacyId) {
+			Object[] rating = ratings.get(pharmacyId);
+			Double average = rating == null || rating[1] == null ? null : ((Number) rating[1]).doubleValue();
+			long total = rating == null || rating[2] == null ? 0L : ((Number) rating[2]).longValue();
+			// Arrondir à 1 décimale
+			dto.setAverageRating(average == null ? null : Math.round(average * 10.0) / 10.0);
+			dto.setTotalReviews(total);
+			List<PharmacyReviewResponseDto> recent = recentReviews.get(pharmacyId);
+			dto.setRecentReviews(total > 0 && recent != null ? new ArrayList<>(recent) : new ArrayList<>());
+			// De garde = une garde ACTIVE ou TO_VERIFY sur la période réellement en cours
+			dto.setIsOnDuty(onDutyIds.contains(pharmacyId));
 		}
-
-		DutyPeriod activePeriod = activePeriodOpt.get();
-
-		// Vérifier si la pharmacie a une garde pour la période active avec statut ACTIVE ou TO_VERIFY
-		List<DutyStatus> allowedStatuses = List.of(DutyStatus.ACTIVE, DutyStatus.TO_VERIFY);
-		List<Duty> duties = dutyRepository.findByPharmacyIdAndDutyPeriodId(pharmacyId, activePeriod.getId());
-		
-		return duties.stream()
-				.anyMatch(d -> allowedStatuses.contains(d.getStatus()));
 	}
 
-	/**
-	 * Enrichit un DTO de pharmacie avec les informations de notation et commentaires
-	 */
-	private void enrichPharmacyWithRatings(PharmacyResponseDto dto, Long pharmacyId) {
-		// Calculer la note moyenne
-		Double averageRating = pharmacyReviewRepository.findAverageRatingByPharmacyId(pharmacyId);
-		if (averageRating != null) {
-			dto.setAverageRating(Math.round(averageRating * 10.0) / 10.0); // Arrondir à 1 décimale
-		} else {
-			dto.setAverageRating(null);
+	private EnrichmentContext buildContext(java.util.Collection<Pharmacy> pharmacies) {
+		Set<Long> ids = new HashSet<>();
+		for (Pharmacy pharmacy : pharmacies) {
+			if (pharmacy.getId() != null) {
+				ids.add(pharmacy.getId());
+			}
+		}
+		if (ids.isEmpty()) {
+			return new EnrichmentContext(Set.of(), java.util.Map.of(), java.util.Map.of());
 		}
 
-		// Compter le nombre total de commentaires
-		Long totalReviews = pharmacyReviewRepository.countByPharmacyId(pharmacyId);
-		dto.setTotalReviews(totalReviews != null ? totalReviews : 0L);
+		// Garde : période en cours lue une seule fois, puis les pharmacies de garde en une requête
+		Set<Long> onDutyIds = new HashSet<>();
+		activeDutyPeriodResolver.findActive().ifPresent(period -> onDutyIds.addAll(
+				dutyRepository.findPharmacyIdsByDutyPeriodIdAndStatusIn(period.getId(), ON_DUTY_STATUSES)));
 
-		// Récupérer les 3 derniers commentaires
-		if (totalReviews != null && totalReviews > 0) {
-			org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(0, 3);
-			List<com.buddies.pharmaciegarde.modules.pharmacy.model.PharmacyReview> recentReviews = 
-					pharmacyReviewRepository.findByPharmacyIdOrderByCreatedAtDesc(pharmacyId, pageable);
-			
-			List<PharmacyReviewResponseDto> recentReviewsDto = recentReviews.stream()
-					.map(this::mapReviewToResponseDto)
-					.collect(Collectors.toList());
-			dto.setRecentReviews(recentReviewsDto);
-		} else {
-			dto.setRecentReviews(new ArrayList<>());
+		// Notes : moyenne et nombre d'avis agrégés en une requête
+		List<Object[]> rows = ids.size() > IN_CLAUSE_LIMIT
+				? pharmacyReviewRepository.aggregateRatingsForAll()
+				: pharmacyReviewRepository.aggregateRatingsFor(ids);
+		java.util.Map<Long, Object[]> ratings = new java.util.HashMap<>();
+		Set<Long> reviewed = new HashSet<>();
+		for (Object[] row : rows) {
+			Long pharmacyId = ((Number) row[0]).longValue();
+			if (!ids.contains(pharmacyId)) {
+				continue;
+			}
+			ratings.put(pharmacyId, row);
+			if (row[2] != null && ((Number) row[2]).longValue() > 0) {
+				reviewed.add(pharmacyId);
+			}
 		}
+
+		// 3 derniers avis, seulement pour les pharmacies qui en ont, en une requête
+		java.util.Map<Long, List<PharmacyReviewResponseDto>> recent = new java.util.HashMap<>();
+		if (!reviewed.isEmpty()) {
+			for (com.buddies.pharmaciegarde.modules.pharmacy.model.PharmacyReview review
+					: pharmacyReviewRepository.findWithClientByPharmacyIdIn(reviewed)) {
+				List<PharmacyReviewResponseDto> list = recent.computeIfAbsent(review.getPharmacy().getId(),
+						key -> new ArrayList<>(3));
+				if (list.size() < 3) {
+					list.add(mapReviewToResponseDto(review));
+				}
+			}
+		}
+		return new EnrichmentContext(onDutyIds, ratings, recent);
 	}
 
 	/**
