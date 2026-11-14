@@ -45,5 +45,10 @@ public interface DutyRepository extends JpaRepository<Duty, Long> {
 	@Query("SELECT d FROM Duty d WHERE d.dutyPeriod.id = :dutyPeriodId AND d.status IN :statuses")
 	List<Duty> findByDutyPeriodIdAndStatusIn(@Param("dutyPeriodId") Long dutyPeriodId,
 			@Param("statuses") List<DutyStatus> statuses);
+
+	/** Identifiants des pharmacies de garde sur une période, en une requête. */
+	@Query("SELECT DISTINCT d.pharmacy.id FROM Duty d WHERE d.dutyPeriod.id = :dutyPeriodId AND d.status IN :statuses")
+	List<Long> findPharmacyIdsByDutyPeriodIdAndStatusIn(@Param("dutyPeriodId") Long dutyPeriodId,
+			@Param("statuses") List<DutyStatus> statuses);
 }
 

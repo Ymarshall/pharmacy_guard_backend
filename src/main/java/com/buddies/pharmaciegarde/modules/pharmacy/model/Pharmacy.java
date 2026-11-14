@@ -83,7 +83,8 @@ public class Pharmacy {
 	@Column(name = "location")
 	private String location;
 
-	@BatchSize(size = 50)
+	// Liste complète (~1 200 pharmacies) : assurances chargées en ~5 requêtes au lieu de ~25
+	@BatchSize(size = 250)
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 			name = "pharmacy_assurances",
